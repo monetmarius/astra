@@ -6,457 +6,774 @@
 
     <title>Astra OS</title>
 
+    <!-- Police -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
+
+    <!-- Icônes Lucide -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <div class="app">
+<div class="app">
 
-        <!-- SIDEBAR -->
-        <aside class="sidebar">
+    <!-- ================= SIDEBAR ================= -->
 
-            <div class="logo">
-                <span>✦</span>
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-star">✦</div>
+
+            <div>
+                <strong>ASTRA</strong>
+                <small>OS</small>
+            </div>
+        </div>
+
+
+        <nav>
+
+            <button class="nav-button active" data-page="dashboard">
+                <i data-lucide="house"></i>
+                <span>Aujourd'hui</span>
+            </button>
+
+            <button class="nav-button" data-page="planning">
+                <i data-lucide="calendar-days"></i>
+                <span>Planning</span>
+            </button>
+
+            <button class="nav-button" data-page="subjects">
+                <i data-lucide="book-open"></i>
+                <span>Matières</span>
+            </button>
+
+            <button class="nav-button" data-page="tasks">
+                <i data-lucide="check-square"></i>
+                <span>Tâches</span>
+            </button>
+
+            <button class="nav-button" data-page="timer">
+                <i data-lucide="timer"></i>
+                <span>Travail</span>
+            </button>
+
+            <button class="nav-button" data-page="stats">
+                <i data-lucide="chart-no-axes-combined"></i>
+                <span>Statistiques</span>
+            </button>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="streak">
+
+                <div class="streak-icon">
+                    <i data-lucide="flame"></i>
+                </div>
+
                 <div>
-                    <strong>ASTRA</strong>
-                    <small>OS</small>
+                    <strong id="streakValue">0 jour</strong>
+                    <small>Série actuelle</small>
                 </div>
+
             </div>
 
-            <nav>
-                <button class="nav-button active" data-page="dashboard">
-                    <span>⌂</span>
-                    Aujourd'hui
-                </button>
 
-                <button class="nav-button" data-page="planning">
-                    <span>◫</span>
-                    Planning
-                </button>
+            <button class="nav-button" data-page="settings">
+                <i data-lucide="settings"></i>
+                <span>Paramètres</span>
+            </button>
 
-                <button class="nav-button" data-page="subjects">
-                    <span>📚</span>
-                    Matières
-                </button>
+        </div>
 
-                <button class="nav-button" data-page="tasks">
-                    <span>✓</span>
-                    Tâches
-                </button>
-
-                <button class="nav-button" data-page="timer">
-                    <span>◷</span>
-                    Travail
-                </button>
-
-                <button class="nav-button" data-page="stats">
-                    <span>⌁</span>
-                    Statistiques
-                </button>
-            </nav>
-
-            <div class="sidebar-bottom">
-                <div class="streak">
-                    <span>🔥</span>
-                    <div>
-                        <strong id="streakValue">0 jour</strong>
-                        <small>Série actuelle</small>
-                    </div>
-                </div>
-
-                <button class="nav-button" data-page="settings">
-                    <span>⚙</span>
-                    Paramètres
-                </button>
-            </div>
-
-        </aside>
+    </aside>
 
 
-        <!-- CONTENU PRINCIPAL -->
-        <main class="main">
 
-            <!-- DASHBOARD -->
-            <section id="dashboard" class="page active">
+    <!-- ================= MAIN ================= -->
 
-                <header class="page-header">
-                    <div>
-                        <p class="eyebrow" id="currentDate"></p>
-                        <h1>Bonjour, Marius.</h1>
-                        <p class="subtitle">
-                            Vue d'ensemble.
-                        </p>
-                    </div>
-                </header>
+    <main class="main">
 
 
-                <!-- STATISTIQUES RAPIDES -->
-                <div class="quick-stats">
+        <!-- ================= DASHBOARD ================= -->
 
-                    <div class="stat-card">
-                        <span class="stat-icon">◷</span>
-                        <div>
-                            <small>Travail aujourd'hui</small>
-                            <strong id="todayTime">0 min</strong>
-                        </div>
-                    </div>
+        <section id="dashboard" class="page active">
 
-                    <div class="stat-card">
-                        <span class="stat-icon">✓</span>
-                        <div>
-                            <small>Tâches terminées</small>
-                            <strong id="completedTasks">0</strong>
-                        </div>
-                    </div>
+            <header class="page-header">
 
-                    <div class="stat-card">
-                        <span class="stat-icon">🔥</span>
-                        <div>
-                            <small>Série</small>
-                            <strong id="dashboardStreak">0 jour</strong>
-                        </div>
-                    </div>
+                <div>
 
-                </div>
+                    <p class="eyebrow" id="currentDate"></p>
 
+                    <h1>Bonjour, Marius.</h1>
 
-                <div class="dashboard-grid">
-
-                    <!-- TÂCHES -->
-                    <div class="card tasks-card">
-
-                        <div class="card-header">
-                            <div>
-                                <span class="card-label">AUJOURD'HUI</span>
-                                <h2>Objectifs</h2>
-                            </div>
-
-                            <button class="text-button" onclick="openPage('tasks')">
-                                Voir tout →
-                            </button>
-                        </div>
-
-                        <div id="dashboardTasks" class="task-list">
-                            <p class="empty">Aucune tâche pour aujourd'hui.</p>
-                        </div>
-
-                    </div>
-
-
-                    <!-- TIMER RAPIDE -->
-                    <div class="card focus-card">
-
-                        <span class="card-label">CONCENTRATION</span>
-
-                        <h2>Prêt à travailler ?</h2>
-
-                        <div class="mini-timer" id="miniTimer">
-                            25:00
-                        </div>
-
-                        <button class="primary-button" onclick="openPage('timer')">
-                            Commencer une session
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <!-- MOT DU JOUR -->
-                <div class="quote-card">
-                    <span>✦</span>
-                    <p id="dailyMessage">
-                        Chaque journée régulière compte.
+                    <p class="subtitle">
+                        Vue d'ensemble.
                     </p>
-                </div>
-
-            </section>
-
-
-            <!-- PLANNING -->
-            <section id="planning" class="page">
-
-                <header class="page-header">
-                    <div>
-                        <p class="eyebrow">ORGANISATION</p>
-                        <h1>Planning</h1>
-                        <p class="subtitle">
-                            Voici tes prochaines échéances.
-                        </p>
-                    </div>
-                </header>
-
-                <div class="card">
-
-                    <div class="card-header">
-                        <div>
-                            <span class="card-label">ÉVÉNEMENTS</span>
-                            <h2>À venir</h2>
-                        </div>
-                    </div>
-
-                    <div id="eventsList" class="events-list">
-                        <p class="empty">
-                            Aucun événement enregistré.
-                        </p>
-                    </div>
-
-                    <div class="add-event">
-
-                        <input id="eventName" type="text"
-                               placeholder="Ex : DS de maths">
-
-                        <input id="eventDate" type="date">
-
-                        <select id="eventType">
-                            <option value="ds">DS</option>
-                            <option value="control">Contrôle</option>
-                            <option value="homework">Devoir</option>
-                            <option value="revision">Révision</option>
-                        </select>
-
-                        <button class="primary-button" onclick="addEvent()">
-                            Ajouter
-                        </button>
-
-                    </div>
 
                 </div>
 
-            </section>
-
-
-            <!-- MATIÈRES -->
-            <section id="subjects" class="page">
-
-                <header class="page-header">
-                    <div>
-                        <p class="eyebrow">APPRENTISSAGE</p>
-                        <h1>Matières</h1>
-                        <p class="subtitle">
-                            Suis ta progression chapitre par chapitre.
-                        </p>
-                    </div>
-                </header>
-
-                <div id="subjectsGrid" class="subjects-grid">
-                    <!-- Généré par JavaScript -->
-                </div>
-
-            </section>
-
-
-            <!-- TÂCHES -->
-            <section id="tasks" class="page">
-
-                <header class="page-header">
-                    <div>
-                        <p class="eyebrow">OBJECTIFS</p>
-                        <h1>Tâches</h1>
-                        <p class="subtitle">
-                            Transforme ce que tu dois faire en actions concrètes.
-                        </p>
-                    </div>
-                </header>
-
-                <div class="card">
-
-                    <div class="add-task">
-
-                        <input id="taskInput"
-                               type="text"
-                               placeholder="Ex : Faire 3 exercices de maths"
-                               onkeydown="handleTaskEnter(event)">
-
-                        <select id="taskSubject">
-                            <option value="Maths">Maths</option>
-                            <option value="Physique">Physique</option>
-                            <option value="Allemand">Allemand</option>
-                            <option value="Français">Français</option>
-                            <option value="Histoire">Histoire</option>
-                            <option value="Autre">Autre</option>
-                        </select>
-
-                        <button class="primary-button" onclick="addTask()">
-                            Ajouter
-                        </button>
-
-                    </div>
-
-                    <div id="allTasks" class="task-list large">
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- TIMER -->
-            <section id="timer" class="page">
-
-                <header class="page-header">
-                    <div>
-                        <p class="eyebrow">CONCENTRATION</p>
-                        <h1>Session de travail</h1>
-                        <p class="subtitle">
-                            Une seule chose à la fois.
-                        </p>
-                    </div>
-                </header>
-
-
-                <div class="timer-container card">
-
-                    <span class="card-label">SESSION ACTUELLE</span>
-
-                    <div id="timerDisplay" class="big-timer">
-                        25:00
-                    </div>
-
-                    <div class="timer-settings">
-
-                        <select id="timerSubject">
-                            <option value="Maths">Maths</option>
-                            <option value="Physique">Physique</option>
-                            <option value="Allemand">Allemand</option>
-                            <option value="Français">Français</option>
-                            <option value="Histoire">Histoire</option>
-                            <option value="Autre">Autre</option>
-                        </select>
-
-                        <input
-                            id="timerMinutes"
-                            type="number"
-                            min="1"
-                            max="180"
-                            value="25"
-                        >
-
-                    </div>
-
-                    <div class="timer-buttons">
-
-                        <button id="startTimer"
-                                class="primary-button"
-                                onclick="startTimer()">
-                            Commencer
-                        </button>
-
-                        <button class="secondary-button"
-                                onclick="pauseTimer()">
-                            Pause
-                        </button>
-
-                        <button class="secondary-button"
-                                onclick="resetTimer()">
-                            Réinitialiser
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </section>
+            </header>
 
 
             <!-- STATISTIQUES -->
-            <section id="stats" class="page">
 
-                <header class="page-header">
+            <div class="quick-stats">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        <i data-lucide="clock-3"></i>
+                    </div>
+
                     <div>
-                        <p class="eyebrow">DONNÉES</p>
-                        <h1>Statistiques</h1>
-                        <p class="subtitle">
-                            Observe ton évolution, sans score artificiel.
-                        </p>
-                    </div>
-                </header>
-
-
-                <div class="stats-overview">
-
-                    <div class="stat-big card">
-                        <span class="card-label">TEMPS TOTAL</span>
-                        <strong id="totalTime">0h 00</strong>
-                        <small>Depuis le début d'Astra</small>
-                    </div>
-
-                    <div class="stat-big card">
-                        <span class="card-label">SESSIONS</span>
-                        <strong id="totalSessions">0</strong>
-                        <small>Sessions terminées</small>
-                    </div>
-
-                    <div class="stat-big card">
-                        <span class="card-label">RÉGULARITÉ</span>
-                        <strong id="totalDays">0</strong>
-                        <small>Jours avec du travail</small>
+                        <small>Travail aujourd'hui</small>
+                        <strong id="todayTime">0 min</strong>
                     </div>
 
                 </div>
 
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        <i data-lucide="circle-check"></i>
+                    </div>
+
+                    <div>
+                        <small>Tâches terminées</small>
+                        <strong id="completedTasks">0</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        <i data-lucide="flame"></i>
+                    </div>
+
+                    <div>
+                        <small>Série</small>
+                        <strong id="dashboardStreak">0 jour</strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- GRILLE PRINCIPALE -->
+
+            <div class="dashboard-grid">
+
+
+                <!-- TÂCHES -->
 
                 <div class="card">
 
                     <div class="card-header">
+
                         <div>
-                            <span class="card-label">RÉPARTITION</span>
-                            <h2>Temps par matière</h2>
+                            <span class="card-label">AUJOURD'HUI</span>
+                            <h2>Objectifs</h2>
                         </div>
+
+                        <button class="text-button" onclick="openPage('tasks')">
+                            Voir tout
+                            <i data-lucide="arrow-right"></i>
+                        </button>
+
                     </div>
 
-                    <div id="subjectStats" class="subject-stats">
+
+                    <div id="dashboardTasks" class="task-list">
+
+                        <p class="empty">
+                            Aucune tâche pour aujourd'hui.
+                        </p>
+
                     </div>
 
                 </div>
 
-            </section>
 
 
-            <!-- PARAMÈTRES -->
-            <section id="settings" class="page">
+                <!-- PLANNING -->
 
-                <header class="page-header">
-                    <div>
-                        <p class="eyebrow">ASTRA</p>
-                        <h1>Paramètres</h1>
-                        <p class="subtitle">
-                            Quelques réglages pour ton espace.
-                        </p>
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+                            <span class="card-label">À VENIR</span>
+                            <h2>Planning</h2>
+                        </div>
+
+                        <button class="text-button" onclick="openPage('planning')">
+                            Voir tout
+                            <i data-lucide="arrow-right"></i>
+                        </button>
+
                     </div>
-                </header>
 
-                <div class="card settings-card">
 
-                    <h2>Données</h2>
+                    <div id="dashboardEvents" class="events-list">
+
+                        <p class="empty">
+                            Aucun événement à venir.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SESSION -->
+
+            <div class="focus-banner">
+
+                <div>
+
+                    <span class="card-label">
+                        CONCENTRATION
+                    </span>
+
+                    <h2>
+                        Prêt à travailler ?
+                    </h2>
 
                     <p>
-                        Tes données sont actuellement enregistrées
-                        directement dans ton navigateur.
+                        Bon courage
                     </p>
 
-                    <button class="secondary-button"
-                            onclick="exportData()">
-                        Exporter mes données
-                    </button>
+                </div>
 
-                    <button class="danger-button"
-                            onclick="clearData()">
-                        Effacer toutes les données
+
+                <button class="primary-button" onclick="openPage('timer')">
+
+                    <i data-lucide="play"></i>
+
+                    Commencer une session
+
+                </button>
+
+            </div>
+
+
+
+            <!-- MESSAGE -->
+
+            <div class="quote-card">
+
+                <span>✦</span>
+
+                <p id="dailyMessage">
+                    Tu feras la fierté de Roxane Le Renard
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= PLANNING ================= -->
+
+        <section id="planning" class="page">
+
+            <header class="page-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        ORGANISATION
+                    </p>
+
+                    <h1>Planning</h1>
+
+                    <p class="subtitle">
+                        Vue d'ensemble.
+                    </p>
+
+                </div>
+
+            </header>
+
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+                        <span class="card-label">
+                            ÉVÉNEMENTS
+                        </span>
+
+                        <h2>
+                            À venir
+                        </h2>
+                    </div>
+
+                </div>
+
+
+                <div id="eventsList" class="events-list">
+
+                    <p class="empty">
+                        Aucun événement enregistré.
+                    </p>
+
+                </div>
+
+
+                <div class="add-event">
+
+                    <input
+                        id="eventName"
+                        type="text"
+                        placeholder="Ex : DS de maths"
+                    >
+
+                    <input
+                        id="eventDate"
+                        type="date"
+                    >
+
+                    <select id="eventType">
+
+                        <option value="DS">
+                            DS
+                        </option>
+
+                        <option value="Contrôle">
+                            Contrôle
+                        </option>
+
+                        <option value="Devoir">
+                            Devoir
+                        </option>
+
+                        <option value="Révision">
+                            Révision
+                        </option>
+
+                    </select>
+
+
+                    <button
+                        class="primary-button"
+                        onclick="addEvent()"
+                    >
+
+                        <i data-lucide="plus"></i>
+
+                        Ajouter
+
                     </button>
 
                 </div>
 
-            </section>
+            </div>
 
-        </main>
-
-    </div>
+        </section>
 
 
-    <script src="script.js"></script>
+
+        <!-- ================= MATIÈRES ================= -->
+
+        <section id="subjects" class="page">
+
+            <header class="page-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        APPRENTISSAGE
+                    </p>
+
+                    <h1>Matières</h1>
+
+                    <p class="subtitle">
+                        Suis ton travail matière par matière.
+                    </p>
+
+                </div>
+
+            </header>
+
+
+            <div id="subjectsGrid" class="subjects-grid"></div>
+
+        </section>
+
+
+
+        <!-- ================= TÂCHES ================= -->
+
+        <section id="tasks" class="page">
+
+            <header class="page-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        OBJECTIFS
+                    </p>
+
+                    <h1>Tâches</h1>
+
+                    <p class="subtitle">
+                        Transforme ce que tu dois faire en actions concrètes.
+                    </p>
+
+                </div>
+
+            </header>
+
+
+            <div class="card">
+
+                <div class="add-task">
+
+                    <input
+                        id="taskInput"
+                        type="text"
+                        placeholder="Ex : Faire 3 exercices de maths"
+                        onkeydown="handleTaskEnter(event)"
+                    >
+
+
+                    <select id="taskSubject">
+
+                        <option>Maths</option>
+                        <option>Physique</option>
+                        <option>Allemand</option>
+                        <option>Français</option>
+                        <option>Histoire</option>
+                        <option>Autre</option>
+
+                    </select>
+
+
+                    <button
+                        class="primary-button"
+                        onclick="addTask()"
+                    >
+
+                        <i data-lucide="plus"></i>
+
+                        Ajouter
+
+                    </button>
+
+                </div>
+
+
+                <div id="allTasks" class="task-list large"></div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= TRAVAIL ================= -->
+
+        <section id="timer" class="page">
+
+            <header class="page-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        CONCENTRATION
+                    </p>
+
+                    <h1>Travail</h1>
+
+                    <p class="subtitle">
+                        Une seule chose à la fois.
+                    </p>
+
+                </div>
+
+            </header>
+
+
+            <div class="timer-container card">
+
+                <span class="card-label">
+                    SESSION ACTUELLE
+                </span>
+
+
+                <div id="timerDisplay" class="big-timer">
+                    25:00
+                </div>
+
+
+                <div class="timer-settings">
+
+                    <select id="timerSubject">
+
+                        <option>Maths</option>
+                        <option>Physique</option>
+                        <option>Allemand</option>
+                        <option>Français</option>
+                        <option>Histoire</option>
+                        <option>Autre</option>
+
+                    </select>
+
+
+                    <input
+                        id="timerMinutes"
+                        type="number"
+                        min="1"
+                        max="180"
+                        value="25"
+                    >
+
+                </div>
+
+
+                <div class="timer-buttons">
+
+                    <button
+                        id="startTimer"
+                        class="primary-button"
+                        onclick="startTimer()"
+                    >
+
+                        <i data-lucide="play"></i>
+
+                        Commencer
+
+                    </button>
+
+
+                    <button
+                        class="secondary-button"
+                        onclick="pauseTimer()"
+                    >
+
+                        <i data-lucide="pause"></i>
+
+                        Pause
+
+                    </button>
+
+
+                    <button
+                        class="secondary-button"
+                        onclick="resetTimer()"
+                    >
+
+                        <i data-lucide="rotate-ccw"></i>
+
+                        Réinitialiser
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= STATS ================= -->
+
+        <section id="stats" class="page">
+
+            <header class="page-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        DONNÉES
+                    </p>
+
+                    <h1>Statistiques</h1>
+
+                    <p class="subtitle">
+                        Observe ton évolution, sans score artificiel.
+                    </p>
+
+                </div>
+
+            </header>
+
+
+            <div class="stats-overview">
+
+                <div class="stat-big card">
+
+                    <span class="card-label">
+                        TEMPS TOTAL
+                    </span>
+
+                    <strong id="totalTime">
+                        0h 00
+                    </strong>
+
+                    <small>
+                        Depuis le début d'Astra
+                    </small>
+
+                </div>
+
+
+                <div class="stat-big card">
+
+                    <span class="card-label">
+                        SESSIONS
+                    </span>
+
+                    <strong id="totalSessions">
+                        0
+                    </strong>
+
+                    <small>
+                        Sessions terminées
+                    </small>
+
+                </div>
+
+
+                <div class="stat-big card">
+
+                    <span class="card-label">
+                        RÉGULARITÉ
+                    </span>
+
+                    <strong id="totalDays">
+                        0
+                    </strong>
+
+                    <small>
+                        Jours avec du travail
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <span class="card-label">
+                            RÉPARTITION
+                        </span>
+
+                        <h2>
+                            Temps par matière
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+                <div id="subjectStats"></div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= PARAMÈTRES ================= -->
+
+        <section id="settings" class="page">
+
+            <header class="page-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        ASTRA
+                    </p>
+
+                    <h1>Paramètres</h1>
+
+                    <p class="subtitle">
+                        Gère tes données.
+                    </p>
+
+                </div>
+
+            </header>
+
+
+            <div class="card settings-card">
+
+                <h2>
+                    Données
+                </h2>
+
+                <p>
+                    Pour l'instant, Astra sauvegarde tes données
+                    dans ce navigateur.
+                </p>
+
+
+                <div class="settings-actions">
+
+                    <button
+                        class="secondary-button"
+                        onclick="exportData()"
+                    >
+
+                        <i data-lucide="download"></i>
+
+                        Exporter mes données
+
+                    </button>
+
+
+                    <button
+                        class="danger-button"
+                        onclick="clearData()"
+                    >
+
+                        <i data-lucide="trash-2"></i>
+
+                        Effacer toutes les données
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="script.js"></script>
 
 </body>
 </html>
