@@ -1,36 +1,49 @@
 /* =========================================================
    ASTRA OS
-   V1
+   V1.1
 ========================================================= */
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    DONNÉES
---------------------------------------------------------- */
+========================================================= */
 
 const defaultData = {
+
     tasks: [],
+
     events: [],
+
     sessions: [],
+
     subjects: {
-        "Maths": 0,
-        "Physique": 0,
-        "Allemand": 0,
-        "Français": 0,
-        "Histoire": 0,
-        "Autre": 0
+
+        Maths: 0,
+
+        Physique: 0,
+
+        Allemand: 0,
+
+        Français: 0,
+
+        Histoire: 0,
+
+        Autre: 0
+
     }
+
 };
 
 
-let data = JSON.parse(
-    localStorage.getItem("astraData")
-) || structuredClone(defaultData);
+let data =
+    JSON.parse(
+        localStorage.getItem("astraData")
+    ) || structuredClone(defaultData);
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    SAUVEGARDE
---------------------------------------------------------- */
+========================================================= */
 
 function saveData() {
 
@@ -42,37 +55,49 @@ function saveData() {
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    NAVIGATION
---------------------------------------------------------- */
+========================================================= */
 
-const navButtons = document.querySelectorAll(".nav-button");
+const navButtons =
+    document.querySelectorAll(".nav-button");
 
 
 navButtons.forEach(button => {
 
-    button.addEventListener("click", () => {
+    button.addEventListener(
+        "click",
+        () => {
 
-        const page = button.dataset.page;
+            openPage(
+                button.dataset.page
+            );
 
-        openPage(page);
-
-    });
+        }
+    );
 
 });
 
 
 function openPage(pageName) {
 
-    document.querySelectorAll(".page").forEach(page => {
-        page.classList.remove("active");
-    });
+    document
+        .querySelectorAll(".page")
+        .forEach(page => {
+
+            page.classList.remove("active");
+
+        });
 
 
-    const target = document.getElementById(pageName);
+    const target =
+        document.getElementById(pageName);
+
 
     if (target) {
+
         target.classList.add("active");
+
     }
 
 
@@ -87,54 +112,76 @@ function openPage(pageName) {
 
 
     if (pageName === "stats") {
+
         updateStats();
+
     }
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
 
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    DATE
---------------------------------------------------------- */
+========================================================= */
 
 function updateDate() {
 
-    const date = new Date();
-
-    const formatted = date.toLocaleDateString(
-        "fr-FR",
-        {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-        }
-    );
+    const date =
+        new Date();
 
 
-    document.getElementById("currentDate")
-        .textContent = formatted.toUpperCase();
+    const formatted =
+        date.toLocaleDateString(
+            "fr-FR",
+            {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            }
+        );
+
+
+    document
+        .getElementById("currentDate")
+        .textContent =
+        formatted.toUpperCase();
 
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    TÂCHES
---------------------------------------------------------- */
+========================================================= */
 
 function addTask() {
 
-    const input = document.getElementById("taskInput");
+    const input =
+        document.getElementById(
+            "taskInput"
+        );
 
-    const subject = document.getElementById("taskSubject");
 
-    const name = input.value.trim();
+    const subject =
+        document.getElementById(
+            "taskSubject"
+        );
+
+
+    const name =
+        input.value.trim();
 
 
     if (!name) return;
 
 
-    const task = {
+    data.tasks.push({
 
         id: Date.now(),
 
@@ -146,15 +193,14 @@ function addTask() {
 
         date: getToday()
 
-    };
+    });
 
-
-    data.tasks.push(task);
 
     saveData();
 
 
     input.value = "";
+
 
     renderTasks();
 
@@ -164,7 +210,9 @@ function addTask() {
 function handleTaskEnter(event) {
 
     if (event.key === "Enter") {
+
         addTask();
+
     }
 
 }
@@ -172,17 +220,21 @@ function handleTaskEnter(event) {
 
 function toggleTask(id) {
 
-    const task = data.tasks.find(
-        task => task.id === id
-    );
+    const task =
+        data.tasks.find(
+            task => task.id === id
+        );
 
 
     if (!task) return;
 
 
-    task.completed = !task.completed;
+    task.completed =
+        !task.completed;
+
 
     saveData();
+
 
     renderTasks();
 
@@ -191,74 +243,90 @@ function toggleTask(id) {
 
 function deleteTask(id) {
 
-    data.tasks = data.tasks.filter(
-        task => task.id !== id
-    );
+    data.tasks =
+        data.tasks.filter(
+            task => task.id !== id
+        );
 
 
     saveData();
+
 
     renderTasks();
 
 }
 
 
-function renderTasks() {
+function createTaskHTML(task) {
 
-    const allTasks = document.getElementById("allTasks");
+    return `
 
-    const dashboardTasks =
-        document.getElementById("dashboardTasks");
+        <div class="task ${task.completed ? "completed" : ""}">
 
+            <input
+                class="task-checkbox"
+                type="checkbox"
+                ${task.completed ? "checked" : ""}
+                onchange="toggleTask(${task.id})"
+            >
 
-    const todayTasks = data.tasks.filter(
-        task => task.date === getToday()
-    );
+            <div class="task-content">
 
-
-    function createTaskHTML(task) {
-
-        return `
-
-            <div class="task ${task.completed ? "completed" : ""}">
-
-                <input
-                    class="task-checkbox"
-                    type="checkbox"
-                    ${task.completed ? "checked" : ""}
-                    onchange="toggleTask(${task.id})"
-                >
-
-                <div class="task-content">
-
-                    <div class="task-name">
-                        ${escapeHTML(task.name)}
-                    </div>
-
-                    <div class="task-subject">
-                        ${escapeHTML(task.subject)}
-                    </div>
-
+                <div class="task-name">
+                    ${escapeHTML(task.name)}
                 </div>
 
-                <button
-                    class="delete-task"
-                    onclick="deleteTask(${task.id})"
-                >
-                    ×
-                </button>
+                <div class="task-subject">
+                    ${escapeHTML(task.subject)}
+                </div>
 
             </div>
 
-        `;
 
-    }
+            <button
+                class="delete-task"
+                onclick="deleteTask(${task.id})"
+                title="Supprimer"
+            >
+
+                <i data-lucide="trash-2"></i>
+
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+function renderTasks() {
+
+    const allTasks =
+        document.getElementById(
+            "allTasks"
+        );
+
+
+    const dashboardTasks =
+        document.getElementById(
+            "dashboardTasks"
+        );
+
+
+    const todayTasks =
+        data.tasks.filter(
+            task =>
+                task.date === getToday()
+        );
 
 
     if (data.tasks.length === 0) {
 
         allTasks.innerHTML =
-            `<p class="empty">Aucune tâche.</p>`;
+            `<p class="empty">
+                Aucune tâche.
+            </p>`;
 
     } else {
 
@@ -273,7 +341,9 @@ function renderTasks() {
     if (todayTasks.length === 0) {
 
         dashboardTasks.innerHTML =
-            `<p class="empty">Aucune tâche pour aujourd'hui.</p>`;
+            `<p class="empty">
+                Aucune tâche pour aujourd'hui.
+            </p>`;
 
     } else {
 
@@ -287,249 +357,35 @@ function renderTasks() {
 
     updateQuickStats();
 
-}
 
-
-/* ---------------------------------------------------------
-   STATISTIQUES RAPIDES
---------------------------------------------------------- */
-
-function updateQuickStats() {
-
-    const todaySessions =
-        data.sessions.filter(
-            session => session.date === getToday()
-        );
-
-
-    const todayMinutes =
-        todaySessions.reduce(
-            (total, session) => total + session.duration,
-            0
-        );
-
-
-    const completed =
-        data.tasks.filter(
-            task => task.completed
-        ).length;
-
-
-    document.getElementById("todayTime")
-        .textContent = formatMinutes(todayMinutes);
-
-
-    document.getElementById("completedTasks")
-        .textContent = completed;
-
-
-    const streak = calculateStreak();
-
-
-    document.getElementById("streakValue")
-        .textContent = `${streak} ${streak > 1 ? "jours" : "jour"}`;
-
-
-    document.getElementById("dashboardStreak")
-        .textContent = `${streak} ${streak > 1 ? "jours" : "jour"}`;
+    refreshIcons();
 
 }
 
 
-/* ---------------------------------------------------------
-   TIMER
---------------------------------------------------------- */
-
-let timerInterval = null;
-
-let remainingSeconds = 25 * 60;
-
-let timerRunning = false;
-
-
-function updateTimerDisplay() {
-
-    const minutes =
-        Math.floor(remainingSeconds / 60);
-
-    const seconds =
-        remainingSeconds % 60;
-
-
-    const formatted =
-        `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-
-
-    document.getElementById("timerDisplay")
-        .textContent = formatted;
-
-
-    document.getElementById("miniTimer")
-        .textContent = formatted;
-
-}
-
-
-function startTimer() {
-
-    if (timerRunning) return;
-
-
-    const minutesInput =
-        document.getElementById("timerMinutes");
-
-
-    if (remainingSeconds === 25 * 60) {
-
-        const minutes =
-            parseInt(minutesInput.value);
-
-
-        if (
-            !isNaN(minutes) &&
-            minutes > 0
-        ) {
-
-            remainingSeconds =
-                minutes * 60;
-
-        }
-
-    }
-
-
-    timerRunning = true;
-
-
-    document.getElementById("startTimer")
-        .textContent = "En cours…";
-
-
-    timerInterval = setInterval(() => {
-
-        remainingSeconds--;
-
-        updateTimerDisplay();
-
-
-        if (remainingSeconds <= 0) {
-
-            finishTimer();
-
-        }
-
-    }, 1000);
-
-}
-
-
-function pauseTimer() {
-
-    clearInterval(timerInterval);
-
-    timerRunning = false;
-
-    document.getElementById("startTimer")
-        .textContent = "Continuer";
-
-}
-
-
-function resetTimer() {
-
-    clearInterval(timerInterval);
-
-    timerRunning = false;
-
-
-    const minutes =
-        parseInt(
-            document.getElementById("timerMinutes").value
-        ) || 25;
-
-
-    remainingSeconds =
-        minutes * 60;
-
-
-    document.getElementById("startTimer")
-        .textContent = "Commencer";
-
-
-    updateTimerDisplay();
-
-}
-
-
-function finishTimer() {
-
-    clearInterval(timerInterval);
-
-    timerRunning = false;
-
-
-    const subject =
-        document.getElementById("timerSubject").value;
-
-
-    const minutes =
-        parseInt(
-            document.getElementById("timerMinutes").value
-        ) || 25;
-
-
-    data.sessions.push({
-
-        id: Date.now(),
-
-        date: getToday(),
-
-        duration: minutes,
-
-        subject: subject
-
-    });
-
-
-    if (!data.subjects[subject]) {
-        data.subjects[subject] = 0;
-    }
-
-
-    data.subjects[subject] += minutes;
-
-
-    saveData();
-
-
-    alert(
-        `Session terminée !\n\n${minutes} minutes de ${subject}.`
-    );
-
-
-    resetTimer();
-
-    updateQuickStats();
-
-}
-
-
-/* ---------------------------------------------------------
+/* =========================================================
    PLANNING
---------------------------------------------------------- */
+========================================================= */
 
 function addEvent() {
 
     const name =
-        document.getElementById("eventName").value.trim();
+        document
+            .getElementById("eventName")
+            .value
+            .trim();
 
 
     const date =
-        document.getElementById("eventDate").value;
+        document
+            .getElementById("eventDate")
+            .value;
 
 
     const type =
-        document.getElementById("eventType").value;
+        document
+            .getElementById("eventType")
+            .value;
 
 
     if (!name || !date) return;
@@ -549,16 +405,22 @@ function addEvent() {
 
 
     data.events.sort(
-        (a, b) => a.date.localeCompare(b.date)
+        (a, b) =>
+            a.date.localeCompare(b.date)
     );
 
 
     saveData();
 
 
-    document.getElementById("eventName").value = "";
+    document
+        .getElementById("eventName")
+        .value = "";
 
-    document.getElementById("eventDate").value = "";
+
+    document
+        .getElementById("eventDate")
+        .value = "";
 
 
     renderEvents();
@@ -566,68 +428,405 @@ function addEvent() {
 }
 
 
+function deleteEvent(id) {
+
+    data.events =
+        data.events.filter(
+            event => event.id !== id
+        );
+
+
+    saveData();
+
+
+    renderEvents();
+
+}
+
+
+function createEventHTML(event) {
+
+    return `
+
+        <div class="event">
+
+            <div class="event-date">
+                ${formatDate(event.date)}
+            </div>
+
+            <div class="event-name">
+                ${escapeHTML(event.name)}
+            </div>
+
+            <div class="event-type">
+                ${escapeHTML(event.type)}
+            </div>
+
+            <button
+                class="delete-event"
+                onclick="deleteEvent(${event.id})"
+                title="Supprimer"
+            >
+
+                <i data-lucide="trash-2"></i>
+
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
 function renderEvents() {
 
     const container =
-        document.getElementById("eventsList");
+        document.getElementById(
+            "eventsList"
+        );
+
+
+    const dashboard =
+        document.getElementById(
+            "dashboardEvents"
+        );
+
+
+    const today =
+        getToday();
+
+
+    const upcoming =
+        data.events
+            .filter(event =>
+                event.date >= today
+            )
+            .sort(
+                (a, b) =>
+                    a.date.localeCompare(b.date)
+            );
 
 
     if (data.events.length === 0) {
 
         container.innerHTML =
-            `<p class="empty">Aucun événement enregistré.</p>`;
+            `<p class="empty">
+                Aucun événement enregistré.
+            </p>`;
 
-        return;
+    } else {
+
+        container.innerHTML =
+            data.events
+                .map(createEventHTML)
+                .join("");
 
     }
 
 
-    container.innerHTML =
-        data.events.map(event => `
+    if (upcoming.length === 0) {
 
-            <div class="event">
+        dashboard.innerHTML =
+            `<p class="empty">
+                Aucun événement à venir.
+            </p>`;
 
-                <div class="event-date">
-                    ${formatDate(event.date)}
-                </div>
+    } else {
 
-                <div class="event-name">
-                    ${escapeHTML(event.name)}
-                </div>
+        dashboard.innerHTML =
+            upcoming
+                .slice(0, 4)
+                .map(createEventHTML)
+                .join("");
 
-                <div class="event-type">
-                    ${event.type}
-                </div>
+    }
 
-            </div>
 
-        `).join("");
+    refreshIcons();
 
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
+   TIMER
+========================================================= */
+
+let timerInterval = null;
+
+let remainingSeconds =
+    25 * 60;
+
+let timerRunning = false;
+
+let timerStartedSeconds =
+    25 * 60;
+
+
+function updateTimerDisplay() {
+
+    const minutes =
+        Math.floor(
+            remainingSeconds / 60
+        );
+
+
+    const seconds =
+        remainingSeconds % 60;
+
+
+    const formatted =
+        `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+
+    document
+        .getElementById("timerDisplay")
+        .textContent =
+        formatted;
+
+}
+
+
+function startTimer() {
+
+    if (timerRunning) return;
+
+
+    const input =
+        document.getElementById(
+            "timerMinutes"
+        );
+
+
+    if (
+        remainingSeconds ===
+        timerStartedSeconds
+    ) {
+
+        const minutes =
+            parseInt(input.value);
+
+
+        if (
+            !isNaN(minutes) &&
+            minutes > 0
+        ) {
+
+            remainingSeconds =
+                minutes * 60;
+
+            timerStartedSeconds =
+                remainingSeconds;
+
+        }
+
+    }
+
+
+    timerRunning = true;
+
+
+    document
+        .getElementById("startTimer")
+        .innerHTML = `
+
+            <i data-lucide="play"></i>
+
+            En cours…
+
+        `;
+
+
+    refreshIcons();
+
+
+    timerInterval =
+        setInterval(() => {
+
+            remainingSeconds--;
+
+            updateTimerDisplay();
+
+
+            if (
+                remainingSeconds <= 0
+            ) {
+
+                finishTimer();
+
+            }
+
+        }, 1000);
+
+}
+
+
+function pauseTimer() {
+
+    clearInterval(
+        timerInterval
+    );
+
+
+    timerRunning = false;
+
+
+    document
+        .getElementById("startTimer")
+        .innerHTML = `
+
+            <i data-lucide="play"></i>
+
+            Continuer
+
+        `;
+
+
+    refreshIcons();
+
+}
+
+
+function resetTimer() {
+
+    clearInterval(
+        timerInterval
+    );
+
+
+    timerRunning = false;
+
+
+    const minutes =
+        parseInt(
+            document
+                .getElementById(
+                    "timerMinutes"
+                )
+                .value
+        ) || 25;
+
+
+    remainingSeconds =
+        minutes * 60;
+
+
+    timerStartedSeconds =
+        remainingSeconds;
+
+
+    document
+        .getElementById("startTimer")
+        .innerHTML = `
+
+            <i data-lucide="play"></i>
+
+            Commencer
+
+        `;
+
+
+    updateTimerDisplay();
+
+
+    refreshIcons();
+
+}
+
+
+function finishTimer() {
+
+    clearInterval(
+        timerInterval
+    );
+
+
+    timerRunning = false;
+
+
+    const subject =
+        document
+            .getElementById(
+                "timerSubject"
+            )
+            .value;
+
+
+    const minutes =
+        Math.round(
+            timerStartedSeconds / 60
+        );
+
+
+    if (minutes > 0) {
+
+        data.sessions.push({
+
+            id: Date.now(),
+
+            date: getToday(),
+
+            duration: minutes,
+
+            subject: subject
+
+        });
+
+
+        if (
+            !data.subjects[subject]
+        ) {
+
+            data.subjects[subject] =
+                0;
+
+        }
+
+
+        data.subjects[subject] +=
+            minutes;
+
+    }
+
+
+    saveData();
+
+
+    alert(
+        `Session terminée !\n\n${minutes} minutes de ${subject}.`
+    );
+
+
+    resetTimer();
+
+
+    renderAll();
+
+}
+
+
+/* =========================================================
    MATIÈRES
---------------------------------------------------------- */
+========================================================= */
 
 const subjectDescriptions = {
 
-    "Maths":
+    Maths:
         "Algèbre, analyse, probabilités et géométrie.",
 
-    "Physique":
+    Physique:
         "Comprendre les phénomènes et savoir les modéliser.",
 
-    "Allemand":
+    Allemand:
         "Vocabulaire, expression et compréhension.",
 
-    "Français":
+    Français:
         "Littérature, analyse et expression.",
 
-    "Histoire":
+    Histoire:
         "Comprendre les événements et savoir les expliquer.",
 
-    "Autre":
+    Autre:
         "Autres matières et projets."
 
 };
@@ -636,66 +835,74 @@ const subjectDescriptions = {
 function renderSubjects() {
 
     const container =
-        document.getElementById("subjectsGrid");
-
-
-    const entries =
-        Object.entries(data.subjects);
+        document.getElementById(
+            "subjectsGrid"
+        );
 
 
     container.innerHTML =
-        entries.map(([name, minutes]) => {
+        Object.entries(
+            data.subjects
+        )
+        .map(
+            ([name, minutes]) => {
 
-            const percent =
-                Math.min(
-                    100,
-                    Math.round(minutes / 3)
-                );
+                const percent =
+                    Math.min(
+                        100,
+                        Math.round(
+                            minutes / 3
+                        )
+                    );
 
 
-            return `
+                return `
 
-                <div class="subject-card">
+                    <div class="subject-card">
 
-                    <div class="subject-top">
+                        <div class="subject-top">
 
-                        <div class="subject-name">
-                            ${name}
+                            <div class="subject-name">
+                                ${name}
+                            </div>
+
+                            <div class="subject-percent">
+                                ${percent}%
+                            </div>
+
                         </div>
 
-                        <div class="subject-percent">
-                            ${percent}%
+
+                        <div class="progress">
+
+                            <div
+                                class="progress-bar"
+                                style="width:${percent}%"
+                            ></div>
+
+                        </div>
+
+
+                        <div class="subject-description">
+
+                            ${subjectDescriptions[name]}
+
                         </div>
 
                     </div>
 
-                    <div class="progress">
+                `;
 
-                        <div
-                            class="progress-bar"
-                            style="width: ${percent}%"
-                        ></div>
-
-                    </div>
-
-                    <div class="subject-description">
-
-                        ${subjectDescriptions[name]}
-
-                    </div>
-
-                </div>
-
-            `;
-
-        }).join("");
+            }
+        )
+        .join("");
 
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    STATISTIQUES
---------------------------------------------------------- */
+========================================================= */
 
 function updateStats() {
 
@@ -707,25 +914,36 @@ function updateStats() {
         );
 
 
-    document.getElementById("totalTime")
-        .textContent = formatHours(totalMinutes);
+    document
+        .getElementById("totalTime")
+        .textContent =
+        formatHours(totalMinutes);
 
 
-    document.getElementById("totalSessions")
-        .textContent = data.sessions.length;
+    document
+        .getElementById("totalSessions")
+        .textContent =
+        data.sessions.length;
 
 
-    document.getElementById("totalDays")
-        .textContent = getWorkedDays();
+    document
+        .getElementById("totalDays")
+        .textContent =
+        getWorkedDays();
 
 
     const container =
-        document.getElementById("subjectStats");
+        document.getElementById(
+            "subjectStats"
+        );
 
 
     container.innerHTML =
-        Object.entries(data.subjects)
-            .map(([subject, minutes]) => {
+        Object.entries(
+            data.subjects
+        )
+        .map(
+            ([subject, minutes]) => {
 
                 const percentage =
                     totalMinutes > 0
@@ -743,7 +961,9 @@ function updateStats() {
 
                         <div class="subject-stat-header">
 
-                            <span>${subject}</span>
+                            <span>
+                                ${subject}
+                            </span>
 
                             <span>
                                 ${formatMinutes(minutes)}
@@ -752,11 +972,12 @@ function updateStats() {
 
                         </div>
 
+
                         <div class="progress">
 
                             <div
                                 class="progress-bar"
-                                style="width: ${percentage}%"
+                                style="width:${percentage}%"
                             ></div>
 
                         </div>
@@ -765,58 +986,41 @@ function updateStats() {
 
                 `;
 
-            }).join("");
+            }
+        )
+        .join("");
 
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    SÉRIE
---------------------------------------------------------- */
+========================================================= */
 
 function calculateStreak() {
 
-    const dates =
-        [...new Set(
+    const workedDates =
+        new Set(
             data.sessions.map(
                 session => session.date
             )
-        )].sort().reverse();
-
-
-    if (dates.length === 0) return 0;
+        );
 
 
     let streak = 0;
 
-    let current = new Date();
+    const current =
+        new Date();
 
 
-    for (const dateString of dates) {
-
-        const expected =
-            getDateString(current);
-
-
-        if (dateString !== expected) {
-
-            if (streak === 0) {
-                current.setDate(
-                    current.getDate() - 1
-                );
-
-                if (dateString !== getDateString(current)) {
-                    break;
-                }
-
-            } else {
-                break;
-            }
-
-        }
-
+    while (
+        workedDates.has(
+            getDateString(current)
+        )
+    ) {
 
         streak++;
+
 
         current.setDate(
             current.getDate() - 1
@@ -830,9 +1034,9 @@ function calculateStreak() {
 }
 
 
-/* ---------------------------------------------------------
-   NOMBRE DE JOURS TRAVAILLÉS
---------------------------------------------------------- */
+/* =========================================================
+   JOURS TRAVAILLÉS
+========================================================= */
 
 function getWorkedDays() {
 
@@ -845,9 +1049,67 @@ function getWorkedDays() {
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
+   QUICK STATS
+========================================================= */
+
+function updateQuickStats() {
+
+    const todaySessions =
+        data.sessions.filter(
+            session =>
+                session.date ===
+                getToday()
+        );
+
+
+    const todayMinutes =
+        todaySessions.reduce(
+            (total, session) =>
+                total + session.duration,
+            0
+        );
+
+
+    const completed =
+        data.tasks.filter(
+            task => task.completed
+        ).length;
+
+
+    const streak =
+        calculateStreak();
+
+
+    document
+        .getElementById("todayTime")
+        .textContent =
+        formatMinutes(todayMinutes);
+
+
+    document
+        .getElementById("completedTasks")
+        .textContent =
+        completed;
+
+
+    document
+        .getElementById("streakValue")
+        .textContent =
+        `${streak} ${streak > 1 ? "jours" : "jour"}`;
+
+
+    document
+        .getElementById("dashboardStreak")
+        .textContent =
+        `${streak} ${streak > 1 ? "jours" : "jour"}`;
+
+}
+
+
+/* =========================================================
    UTILITAIRES
---------------------------------------------------------- */
+========================================================= */
 
 function getToday() {
 
@@ -891,7 +1153,9 @@ function formatMinutes(minutes) {
 
 
     const hours =
-        Math.floor(minutes / 60);
+        Math.floor(
+            minutes / 60
+        );
 
 
     const remaining =
@@ -906,7 +1170,9 @@ function formatMinutes(minutes) {
 function formatHours(minutes) {
 
     const hours =
-        Math.floor(minutes / 60);
+        Math.floor(
+            minutes / 60
+        );
 
 
     const remaining =
@@ -921,7 +1187,10 @@ function formatHours(minutes) {
 function formatDate(dateString) {
 
     const date =
-        new Date(dateString + "T12:00:00");
+        new Date(
+            dateString +
+            "T12:00:00"
+        );
 
 
     return date.toLocaleDateString(
@@ -938,18 +1207,40 @@ function formatDate(dateString) {
 function escapeHTML(text) {
 
     const div =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     div.textContent = text;
+
 
     return div.innerHTML;
 
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
+   ICÔNES
+========================================================= */
+
+function refreshIcons() {
+
+    if (
+        typeof lucide !==
+        "undefined"
+    ) {
+
+        lucide.createIcons();
+
+    }
+
+}
+
+
+/* =========================================================
    EXPORT
---------------------------------------------------------- */
+========================================================= */
 
 function exportData() {
 
@@ -963,20 +1254,26 @@ function exportData() {
                 )
             ],
             {
-                type: "application/json"
+                type:
+                    "application/json"
             }
         );
 
 
     const url =
-        URL.createObjectURL(file);
+        URL.createObjectURL(
+            file
+        );
 
 
     const link =
-        document.createElement("a");
+        document.createElement(
+            "a"
+        );
 
 
     link.href = url;
+
 
     link.download =
         `astra-backup-${getToday()}.json`;
@@ -990,26 +1287,30 @@ function exportData() {
 }
 
 
-/* ---------------------------------------------------------
-   SUPPRESSION DES DONNÉES
---------------------------------------------------------- */
+/* =========================================================
+   SUPPRESSION
+========================================================= */
 
 function clearData() {
 
     const confirmation =
         confirm(
-            "Attention : toutes tes données Astra seront supprimées. Continuer ?"
+            "Toutes tes données Astra seront supprimées. Continuer ?"
         );
 
 
     if (!confirmation) return;
 
 
-    localStorage.removeItem("astraData");
+    localStorage.removeItem(
+        "astraData"
+    );
 
 
     data =
-        structuredClone(defaultData);
+        structuredClone(
+            defaultData
+        );
 
 
     renderAll();
@@ -1017,9 +1318,9 @@ function clearData() {
 }
 
 
-/* ---------------------------------------------------------
+/* =========================================================
    INITIALISATION
---------------------------------------------------------- */
+========================================================= */
 
 function renderAll() {
 
@@ -1036,6 +1337,8 @@ function renderAll() {
     updateQuickStats();
 
     updateTimerDisplay();
+
+    refreshIcons();
 
 }
 
