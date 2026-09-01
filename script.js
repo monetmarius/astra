@@ -3301,20 +3301,14 @@ function updateDailyMessage() {
 
     const messages = [
 
-        "La régularité bat la motivation.",
+        "Roxane sera fière de toi",
 
-        "Une bonne session vaut mieux qu'une journée parfaite imaginée.",
+        "Travail petit à petit",
 
-        "Travaille sur ce qui est devant toi.",
+        "Je suis sur que tu y arriveras",
 
-        "Chaque heure réellement travaillée s'additionne.",
-
-        "Tu n'as pas besoin de tout réussir aujourd'hui.",
-
-        "Comprendre vaut mieux que simplement terminer.",
-
-        "Commence petit. Continue longtemps."
-
+        "Roxane t'aime de tout son coeur",
+        "Tu vas rendre Roxane heureuse",
     ];
 
 
