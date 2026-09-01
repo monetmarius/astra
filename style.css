@@ -1,1421 +1,2285 @@
-<!DOCTYPE html>
-<html lang="fr">
+:root {
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    --linen: #eee8dc;
+    --linen-dark: #e1d7c6;
+    --cream: #f8f4ec;
 
-    <title>Astra OS</title>
+    --forest: #29483c;
+    --forest-light: #597466;
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    --burgundy: #864343;
+    --burgundy-light: #a86262;
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600&display=swap"
-        rel="stylesheet">
+    --charcoal: #292a27;
+    --muted: #77766e;
 
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    --border: rgba(41, 42, 39, 0.11);
 
-    <link rel="stylesheet" href="style.css">
-</head>
+    --shadow:
+        0 12px 35px rgba(41, 42, 39, 0.07);
 
+    --radius: 20px;
+}
 
-<body>
 
-<div class="app">
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-    <!-- ================= SIDEBAR ================= -->
 
-    <aside class="sidebar">
+body {
 
-        <div class="logo">
+    min-height: 100vh;
 
-            <div class="logo-star">✦</div>
+    background:
+        radial-gradient(
+            circle at 20% 10%,
+            rgba(255,255,255,0.35),
+            transparent 35%
+        ),
+        var(--linen);
 
-            <div>
-                <strong>ASTRA</strong>
-                <small>OS</small>
-            </div>
+    color: var(--charcoal);
 
-        </div>
+    font-family:
+        "DM Sans",
+        sans-serif;
+}
 
 
-        <nav>
+/* =========================================================
+   APP
+========================================================= */
 
-            <button class="nav-button active" data-page="dashboard">
-                <i data-lucide="house"></i>
-                <span>Aujourd'hui</span>
-            </button>
+.app {
+    min-height: 100vh;
+    display: flex;
+}
 
-            <button class="nav-button" data-page="planning">
-                <i data-lucide="calendar-days"></i>
-                <span>Planning</span>
-            </button>
 
-            <button class="nav-button" data-page="tasks">
-                <i data-lucide="check-square"></i>
-                <span>Tâches</span>
-            </button>
+/* =========================================================
+   SIDEBAR
+========================================================= */
 
-            <button class="nav-button" data-page="subjects">
-                <i data-lucide="book-open"></i>
-                <span>Matières</span>
-            </button>
+.sidebar {
 
-            <button class="nav-button" data-page="timer">
-                <i data-lucide="timer"></i>
-                <span>Travail</span>
-            </button>
+    position: fixed;
 
-            <button class="nav-button" data-page="goals">
-                <i data-lucide="target"></i>
-                <span>Objectifs</span>
-            </button>
+    left: 0;
+    top: 0;
+    bottom: 0;
 
-            <button class="nav-button" data-page="journal">
-                <i data-lucide="notebook-pen"></i>
-                <span>Journal</span>
-            </button>
+    width: 265px;
 
-            <button class="nav-button" data-page="stats">
-                <i data-lucide="chart-no-axes-combined"></i>
-                <span>Statistiques</span>
-            </button>
+    padding: 32px 22px;
 
-        </nav>
+    display: flex;
+    flex-direction: column;
 
+    background:
+        rgba(248,244,236,0.84);
 
-        <div class="sidebar-bottom">
+    border-right:
+        1px solid var(--border);
 
-            <div class="streak">
+    backdrop-filter: blur(10px);
 
-                <div class="streak-icon">
-                    <i data-lucide="flame"></i>
-                </div>
+    z-index: 20;
+}
 
-                <div>
-                    <strong id="streakValue">0 jour</strong>
-                    <small>Série actuelle</small>
-                </div>
 
-            </div>
+.logo {
 
+    display: flex;
+    align-items: center;
 
-            <button class="nav-button" data-page="settings">
-                <i data-lucide="settings"></i>
-                <span>Paramètres</span>
-            </button>
+    gap: 12px;
 
-        </div>
+    padding: 5px 10px;
 
-    </aside>
+    margin-bottom: 38px;
+}
 
 
+.logo-star {
 
-    <!-- ================= MAIN ================= -->
+    color: var(--burgundy);
 
-    <main class="main">
+    font-size: 30px;
 
+    line-height: 1;
+}
 
-        <!-- ================= DASHBOARD ================= -->
 
-        <section id="dashboard" class="page active">
+.logo strong {
 
-            <header class="page-header">
+    display: block;
 
-                <div>
+    color: var(--forest);
 
-                    <p class="eyebrow" id="currentDate"></p>
+    font-size: 21px;
 
-                    <h1>Bonjour, Marius.</h1>
+    letter-spacing: 3px;
+}
 
-                    <p class="subtitle">
-                        Voici ton orbite pour aujourd'hui.
-                    </p>
 
-                </div>
+.logo small {
 
-            </header>
+    color: var(--muted);
 
+    font-size: 10px;
 
-            <div class="quick-stats">
+    letter-spacing: 3px;
+}
 
-                <div class="stat-card">
 
-                    <div class="stat-icon">
-                        <i data-lucide="clock-3"></i>
-                    </div>
+nav {
 
-                    <div>
-                        <small>Travail aujourd'hui</small>
-                        <strong id="todayTime">0 min</strong>
-                    </div>
+    display: flex;
+    flex-direction: column;
 
-                </div>
+    gap: 4px;
+}
 
 
-                <div class="stat-card">
+.nav-button {
 
-                    <div class="stat-icon">
-                        <i data-lucide="circle-check"></i>
-                    </div>
+    width: 100%;
 
-                    <div>
-                        <small>Tâches terminées</small>
-                        <strong id="completedTasks">0 / 0</strong>
-                    </div>
+    border: none;
 
-                </div>
+    background: transparent;
 
+    color: var(--muted);
 
-                <div class="stat-card">
+    padding: 11px 15px;
 
-                    <div class="stat-icon">
-                        <i data-lucide="flame"></i>
-                    </div>
+    border-radius: 13px;
 
-                    <div>
-                        <small>Série</small>
-                        <strong id="dashboardStreak">0 jour</strong>
-                    </div>
+    font-family: inherit;
 
-                </div>
+    font-size: 14px;
 
-            </div>
+    cursor: pointer;
 
+    display: flex;
+    align-items: center;
 
+    gap: 14px;
 
-            <div class="dashboard-grid">
+    transition:
+        background 0.2s,
+        color 0.2s,
+        transform 0.2s;
+}
 
 
-                <!-- TÂCHES -->
+.nav-button svg {
 
-                <div class="card">
+    width: 19px;
+    height: 19px;
 
-                    <div class="card-header">
+    stroke-width: 1.8;
 
-                        <div>
-                            <span class="card-label">AUJOURD'HUI</span>
-                            <h2>Tâches du jour</h2>
-                        </div>
+    flex-shrink: 0;
+}
 
-                        <button class="text-button" onclick="openPage('tasks')">
-                            Voir tout
-                            <i data-lucide="arrow-right"></i>
-                        </button>
 
-                    </div>
+.nav-button:hover {
 
+    background:
+        rgba(41,72,60,0.07);
 
-                    <div id="dashboardTasks" class="task-list">
+    color: var(--forest);
 
-                        <p class="empty">
-                            Aucune tâche pour aujourd'hui.
-                        </p>
+    transform: translateX(2px);
+}
 
-                    </div>
 
-                </div>
+.nav-button.active {
 
+    background: var(--forest);
 
+    color: var(--cream);
 
-                <!-- PLANNING -->
+    box-shadow:
+        0 7px 20px rgba(41,72,60,0.15);
+}
 
-                <div class="card">
 
-                    <div class="card-header">
+.sidebar-bottom {
+    margin-top: auto;
+}
 
-                        <div>
-                            <span class="card-label">À VENIR</span>
-                            <h2>Planning</h2>
-                        </div>
 
-                        <button class="text-button" onclick="openPage('planning')">
-                            Voir tout
-                            <i data-lucide="arrow-right"></i>
-                        </button>
+.streak {
 
-                    </div>
+    display: flex;
+    align-items: center;
 
+    gap: 12px;
 
-                    <div id="dashboardEvents" class="events-list">
+    padding: 15px;
 
-                        <p class="empty">
-                            Aucun événement à venir.
-                        </p>
+    background: var(--linen);
 
-                    </div>
+    border:
+        1px solid var(--border);
 
-                </div>
+    border-radius: 15px;
 
-            </div>
+    margin-bottom: 15px;
+}
 
 
+.streak-icon {
 
-            <!-- OBJECTIF DE LA SEMAINE -->
+    width: 38px;
+    height: 38px;
 
-            <div class="card weekly-progress-card">
+    display: grid;
+    place-items: center;
 
-                <div class="card-header">
+    background: var(--cream);
 
-                    <div>
-                        <span class="card-label">CETTE SEMAINE</span>
-                        <h2>Ton objectif</h2>
-                    </div>
+    border-radius: 11px;
 
-                    <strong id="weeklyGoalText">
-                        0h / 0h
-                    </strong>
+    color: var(--burgundy);
+}
 
-                </div>
 
+.streak-icon svg {
+    width: 18px;
+}
 
-                <div class="large-progress">
 
-                    <div
-                        id="weeklyGoalBar"
-                        class="progress-bar"
-                        style="width: 0%"
-                    ></div>
+.streak strong {
 
-                </div>
+    display: block;
 
+    font-size: 13px;
+}
 
-                <p id="weeklyGoalMessage" class="progress-message">
-                    Définis un objectif hebdomadaire pour commencer.
-                </p>
 
-            </div>
+.streak small {
 
+    color: var(--muted);
 
+    font-size: 11px;
+}
 
-            <!-- SESSION -->
 
-            <div class="focus-banner">
+/* =========================================================
+   MAIN
+========================================================= */
 
-                <div>
+.main {
 
-                    <span class="card-label">
-                        CONCENTRATION
-                    </span>
+    width: calc(100% - 265px);
 
-                    <h2>
-                        Prêt à travailler ?
-                    </h2>
+    margin-left: 265px;
 
-                    <p>
-                        Une seule chose à la fois.
-                    </p>
+    padding:
+        58px
+        clamp(30px, 6vw, 90px)
+        90px;
 
-                </div>
+    max-width: 1550px;
+}
 
 
-                <button class="primary-button" onclick="openPage('timer')">
+.page {
 
-                    <i data-lucide="play"></i>
+    display: none;
 
-                    Commencer une session
+    animation:
+        pageAppear 0.25s ease;
+}
 
-                </button>
 
-            </div>
+.page.active {
+    display: block;
+}
 
 
+@keyframes pageAppear {
 
-            <div class="quote-card">
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
 
-                <span>✦</span>
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 
-                <p id="dailyMessage">
-                    Chaque journée régulière compte.
-                </p>
+}
 
-            </div>
 
-        </section>
+/* =========================================================
+   HEADERS
+========================================================= */
 
+.page-header {
+    margin-bottom: 38px;
+}
 
 
-        <!-- ================= PLANNING ================= -->
+.eyebrow,
+.card-label {
 
-        <section id="planning" class="page">
+    color: var(--burgundy);
 
-            <header class="page-header">
+    font-size: 10px;
 
-                <div>
+    font-weight: 700;
 
-                    <p class="eyebrow">
-                        ORGANISATION
-                    </p>
+    letter-spacing: 2px;
+}
 
-                    <h1>Planning</h1>
 
-                    <p class="subtitle">
-                        Garde une vue claire de tes échéances.
-                    </p>
+.page-header h1 {
 
-                </div>
+    margin:
+        6px 0
+        5px;
 
-            </header>
+    font-family:
+        "Playfair Display",
+        serif;
 
+    font-size:
+        clamp(36px, 4vw, 54px);
 
-            <div class="card">
+    font-weight: 500;
 
-                <div class="card-header">
+    line-height: 1.1;
+}
 
-                    <div>
-                        <span class="card-label">
-                            ÉVÉNEMENTS
-                        </span>
 
-                        <h2>
-                            À venir
-                        </h2>
-                    </div>
+.subtitle {
 
-                </div>
+    color: var(--muted);
 
+    font-size: 16px;
+}
 
-                <div class="add-event">
 
-                    <input
-                        id="eventName"
-                        type="text"
-                        placeholder="Ex : DS de maths"
-                    >
+/* =========================================================
+   CARDS
+========================================================= */
 
-                    <input
-                        id="eventDate"
-                        type="date"
-                    >
+.card {
 
-                    <select id="eventType">
+    background:
+        rgba(248,244,236,0.82);
 
-                        <option value="DS">DS</option>
-                        <option value="Contrôle">Contrôle</option>
-                        <option value="Devoir">Devoir</option>
-                        <option value="Révision">Révision</option>
-                        <option value="Autre">Autre</option>
+    border:
+        1px solid var(--border);
 
-                    </select>
+    border-radius: var(--radius);
 
+    padding: 28px;
 
-                    <button
-                        class="primary-button"
-                        onclick="addEvent()"
-                    >
+    box-shadow: var(--shadow);
 
-                        <i data-lucide="plus"></i>
+    backdrop-filter: blur(5px);
+}
 
-                        Ajouter
 
-                    </button>
+.card + .card {
+    margin-top: 20px;
+}
 
-                </div>
 
+.card-header {
 
-                <div id="eventsList" class="events-list large"></div>
+    display: flex;
 
-            </div>
+    justify-content: space-between;
 
-        </section>
+    align-items: center;
 
+    gap: 15px;
 
+    margin-bottom: 22px;
+}
 
-        <!-- ================= TÂCHES ================= -->
 
-        <section id="tasks" class="page">
+.card h2 {
 
-            <header class="page-header">
+    margin-top: 4px;
 
-                <div>
+    font-family:
+        "Playfair Display",
+        serif;
 
-                    <p class="eyebrow">
-                        OBJECTIFS
-                    </p>
+    font-size: 26px;
 
-                    <h1>Tâches</h1>
+    font-weight: 500;
+}
 
-                    <p class="subtitle">
-                        Transforme ce que tu dois faire en actions concrètes.
-                    </p>
 
-                </div>
+/* =========================================================
+   QUICK STATS
+========================================================= */
 
-            </header>
+.quick-stats {
 
+    display: grid;
 
-            <div class="card">
+    grid-template-columns:
+        repeat(3,1fr);
 
-                <div class="add-task">
+    gap: 17px;
 
-                    <input
-                        id="taskInput"
-                        type="text"
-                        placeholder="Ex : Faire 3 exercices de maths"
-                        onkeydown="handleTaskEnter(event)"
-                    >
+    margin-bottom: 20px;
+}
 
 
-                    <select id="taskSubject">
+.stat-card {
 
-                        <option>Maths</option>
-                        <option>Physique</option>
-                        <option>Allemand</option>
-                        <option>Français</option>
-                        <option>Histoire</option>
-                        <option>Autre</option>
+    display: flex;
 
-                    </select>
+    align-items: center;
 
+    gap: 15px;
 
-                    <button
-                        class="primary-button"
-                        onclick="addTask()"
-                    >
+    padding: 22px;
 
-                        <i data-lucide="plus"></i>
+    background:
+        rgba(248,244,236,0.65);
 
-                        Ajouter
+    border:
+        1px solid var(--border);
 
-                    </button>
+    border-radius: 17px;
+}
 
-                </div>
 
+.stat-icon {
 
-                <div class="task-filters">
+    width: 45px;
+    height: 45px;
 
-                    <button
-                        class="filter-button active"
-                        onclick="setTaskFilter('all', this)"
-                    >
-                        Toutes
-                    </button>
+    display: grid;
+    place-items: center;
 
-                    <button
-                        class="filter-button"
-                        onclick="setTaskFilter('today', this)"
-                    >
-                        Aujourd'hui
-                    </button>
+    background: var(--linen);
 
-                    <button
-                        class="filter-button"
-                        onclick="setTaskFilter('pending', this)"
-                    >
-                        À faire
-                    </button>
+    color: var(--forest);
 
-                    <button
-                        class="filter-button"
-                        onclick="setTaskFilter('done', this)"
-                    >
-                        Terminées
-                    </button>
+    border-radius: 13px;
+}
 
-                </div>
 
+.stat-icon svg {
+    width: 21px;
+}
 
-                <div id="allTasks" class="task-list large"></div>
 
-            </div>
+.stat-card small {
 
-        </section>
+    display: block;
 
+    color: var(--muted);
 
+    font-size: 12px;
+}
 
-        <!-- ================= MATIÈRES ================= -->
 
-        <section id="subjects" class="page">
+.stat-card strong {
 
-            <header class="page-header">
+    display: block;
 
-                <div>
+    margin-top: 3px;
 
-                    <p class="eyebrow">
-                        APPRENTISSAGE
-                    </p>
+    font-size: 22px;
+}
 
-                    <h1>Matières</h1>
 
-                    <p class="subtitle">
-                        Observe où va réellement ton temps.
-                    </p>
+/* =========================================================
+   DASHBOARD
+========================================================= */
 
-                </div>
+.dashboard-grid {
 
-            </header>
+    display: grid;
 
+    grid-template-columns:
+        1.25fr 1fr;
 
-            <div id="subjectsGrid" class="subjects-grid"></div>
+    gap: 20px;
+}
 
-            <div id="subjectDetail" class="subject-detail" hidden></div>
 
-        </section>
+/* =========================================================
+   TASKS
+========================================================= */
 
+.task-list {
 
+    display: flex;
 
-        <!-- ================= TRAVAIL ================= -->
+    flex-direction: column;
 
-        <section id="timer" class="page">
+    gap: 5px;
+}
 
-            <header class="page-header">
 
-                <div>
+.task {
 
-                    <p class="eyebrow">
-                        CONCENTRATION
-                    </p>
+    display: flex;
 
-                    <h1>Travail</h1>
+    align-items: center;
 
-                    <p class="subtitle">
-                        Une seule chose à la fois.
-                    </p>
+    gap: 13px;
 
-                </div>
+    padding: 13px;
 
-            </header>
+    border-radius: 12px;
 
+    transition:
+        background 0.2s;
+}
 
-            <div class="timer-container card">
 
-                <span class="card-label">
-                    SESSION ACTUELLE
-                </span>
+.task:hover {
+    background: var(--linen);
+}
 
 
-                <div id="timerDisplay" class="big-timer">
-                    25:00
-                </div>
+.task-checkbox {
 
+    width: 20px;
+    height: 20px;
 
-                <div class="session-form">
+    accent-color: var(--forest);
 
-                    <div class="form-group">
+    cursor: pointer;
+}
 
-                        <label>Matière</label>
 
-                        <select id="timerSubject">
+.task-content {
 
-                            <option>Maths</option>
-                            <option>Physique</option>
-                            <option>Allemand</option>
-                            <option>Français</option>
-                            <option>Histoire</option>
-                            <option>Autre</option>
+    flex: 1;
 
-                        </select>
+    min-width: 0;
+}
 
-                    </div>
 
+.task-name {
 
-                    <div class="form-group">
+    font-size: 15px;
 
-                        <label>Tâche</label>
+    overflow: hidden;
 
-                        <select id="timerTask">
+    text-overflow: ellipsis;
+}
 
-                            <option value="">
-                                Session générale
-                            </option>
 
-                        </select>
+.task.completed .task-name {
 
-                    </div>
+    color: var(--muted);
 
+    text-decoration: line-through;
+}
 
-                    <div class="form-group">
 
-                        <label>Durée</label>
+.task-subject {
 
-                        <input
-                            id="timerMinutes"
-                            type="number"
-                            min="1"
-                            max="180"
-                            value="25"
-                        >
+    margin-top: 3px;
 
-                    </div>
+    color: var(--muted);
 
-                </div>
+    font-size: 11px;
+}
 
 
-                <div class="timer-buttons">
+.delete-task {
 
-                    <button
-                        id="startTimer"
-                        class="primary-button"
-                        onclick="startTimer()"
-                    >
+    width: 30px;
+    height: 30px;
 
-                        <i data-lucide="play"></i>
+    display: grid;
+    place-items: center;
 
-                        Commencer
+    border: none;
 
-                    </button>
+    background: transparent;
 
+    color: var(--muted);
 
-                    <button
-                        class="secondary-button"
-                        onclick="pauseTimer()"
-                    >
+    cursor: pointer;
 
-                        <i data-lucide="pause"></i>
+    border-radius: 8px;
 
-                        Pause
+    opacity: 0;
 
-                    </button>
+    transition: 0.2s;
+}
 
 
-                    <button
-                        class="secondary-button"
-                        onclick="resetTimer()"
-                    >
+.task:hover .delete-task {
+    opacity: 1;
+}
 
-                        <i data-lucide="rotate-ccw"></i>
 
-                        Réinitialiser
+.delete-task:hover {
 
-                    </button>
+    background:
+        rgba(134,67,67,0.1);
 
-                </div>
+    color: var(--burgundy);
+}
 
-            </div>
 
+.task-filters {
 
-            <div class="card recent-sessions">
+    display: flex;
 
-                <div class="card-header">
+    flex-wrap: wrap;
 
-                    <div>
-                        <span class="card-label">
-                            HISTORIQUE
-                        </span>
+    gap: 7px;
 
-                        <h2>
-                            Dernières sessions
-                        </h2>
-                    </div>
+    margin-bottom: 20px;
+}
 
-                </div>
 
-                <div id="recentSessions"></div>
+.filter-button {
 
-            </div>
+    border: 1px solid var(--border);
 
-        </section>
+    background: var(--linen);
 
+    color: var(--muted);
 
+    padding: 8px 13px;
 
-        <!-- ================= OBJECTIFS ================= -->
+    border-radius: 9px;
 
-        <section id="goals" class="page">
+    font-family: inherit;
 
-            <header class="page-header">
+    font-size: 12px;
 
-                <div>
+    cursor: pointer;
+}
 
-                    <p class="eyebrow">
-                        DIRECTION
-                    </p>
 
-                    <h1>Objectifs</h1>
+.filter-button.active {
 
-                    <p class="subtitle">
-                        Fixe des objectifs mesurables, pas des intentions vagues.
-                    </p>
+    background: var(--forest);
 
-                </div>
+    color: var(--cream);
 
-            </header>
+    border-color: var(--forest);
+}
 
 
-            <div class="card">
+/* =========================================================
+   EVENTS
+========================================================= */
 
-                <div class="card-header">
+.event {
 
-                    <div>
-                        <span class="card-label">
-                            OBJECTIF HEBDOMADAIRE
-                        </span>
+    display: flex;
 
-                        <h2>
-                            Temps de travail
-                        </h2>
-                    </div>
+    align-items: center;
 
-                </div>
+    gap: 13px;
 
+    padding: 13px 0;
 
-                <div class="goal-editor">
+    border-bottom:
+        1px solid var(--border);
+}
 
-                    <label>
-                        Combien d'heures veux-tu travailler cette semaine ?
-                    </label>
 
-                    <div class="goal-input">
+.event:last-child {
+    border-bottom: none;
+}
 
-                        <input
-                            id="weeklyGoalInput"
-                            type="number"
-                            min="0"
-                            max="168"
-                            step="0.5"
-                            placeholder="Ex : 10"
-                        >
 
-                        <span>heures</span>
+.event-date {
 
-                        <button
-                            class="primary-button"
-                            onclick="saveWeeklyGoal()"
-                        >
-                            Enregistrer
-                        </button>
+    min-width: 62px;
 
-                    </div>
+    color: var(--burgundy);
 
-                </div>
+    font-weight: 600;
 
+    font-size: 13px;
+}
 
-                <div class="goal-display">
 
-                    <div class="goal-number" id="goalDisplay">
-                        0h / 0h
-                    </div>
+.event-name {
 
-                    <div class="large-progress">
+    flex: 1;
 
-                        <div
-                            id="goalPageBar"
-                            class="progress-bar"
-                            style="width:0%"
-                        ></div>
+    font-size: 14px;
+}
 
-                    </div>
 
-                    <p id="goalPageMessage">
-                        Aucun objectif défini.
-                    </p>
+.event-type {
 
-                </div>
+    color: var(--muted);
 
-            </div>
+    font-size: 10px;
 
+    text-transform: uppercase;
 
+    letter-spacing: 0.7px;
+}
 
-            <div class="card">
 
-                <div class="card-header">
+.delete-event {
 
-                    <div>
-                        <span class="card-label">
-                            PAR MATIÈRE
-                        </span>
+    border: none;
 
-                        <h2>
-                            Temps cette semaine
-                        </h2>
-                    </div>
+    background: transparent;
 
-                </div>
+    color: var(--muted);
 
+    cursor: pointer;
 
-                <div id="weeklySubjectGoals"></div>
+    opacity: 0;
 
-            </div>
+    padding: 5px;
+}
 
-        </section>
 
+.event:hover .delete-event {
+    opacity: 1;
+}
 
 
-        <!-- ================= JOURNAL ================= -->
+.event-date-full {
 
-        <section id="journal" class="page">
+    min-width: 115px;
+}
 
-            <header class="page-header">
 
-                <div>
+/* =========================================================
+   PROGRESS
+========================================================= */
 
-                    <p class="eyebrow">
-                        RÉFLEXION
-                    </p>
+.weekly-progress-card {
 
-                    <h1>Journal</h1>
+    margin-top: 20px;
+}
 
-                    <p class="subtitle">
-                        Comprendre tes journées fait aussi partie du travail.
-                    </p>
 
-                </div>
+.weekly-progress-card > .card-header strong {
 
-            </header>
+    color: var(--forest);
 
+    font-size: 15px;
+}
 
-            <div class="card journal-editor">
 
-                <div class="journal-date">
+.large-progress {
 
-                    <div>
+    width: 100%;
 
-                        <span class="card-label">
-                            AUJOURD'HUI
-                        </span>
+    height: 10px;
 
-                        <h2 id="journalDate">
-                            Aujourd'hui
-                        </h2>
+    overflow: hidden;
 
-                    </div>
+    background: var(--linen-dark);
 
-                </div>
+    border-radius: 20px;
+}
 
 
-                <div class="mood-section">
+.progress-bar {
 
-                    <label>
-                        Comment s'est passée ta journée ?
-                    </label>
+    height: 100%;
 
-                    <div class="mood-buttons">
+    background: var(--forest);
 
-                        <button
-                            class="mood-button"
-                            data-mood="1"
-                            onclick="selectMood(1)"
-                        >
-                            Très mauvaise
-                        </button>
+    border-radius: inherit;
 
-                        <button
-                            class="mood-button"
-                            data-mood="2"
-                            onclick="selectMood(2)"
-                        >
-                            Mauvaise
-                        </button>
+    transition:
+        width 0.4s ease;
+}
 
-                        <button
-                            class="mood-button"
-                            data-mood="3"
-                            onclick="selectMood(3)"
-                        >
-                            Moyenne
-                        </button>
 
-                        <button
-                            class="mood-button"
-                            data-mood="4"
-                            onclick="selectMood(4)"
-                        >
-                            Bien
-                        </button>
+.progress-message {
 
-                        <button
-                            class="mood-button"
-                            data-mood="5"
-                            onclick="selectMood(5)"
-                        >
-                            Très bien
-                        </button>
+    margin-top: 12px;
 
-                    </div>
+    color: var(--muted);
 
-                </div>
+    font-size: 13px;
+}
 
 
-                <div class="journal-fields">
+/* =========================================================
+   FOCUS
+========================================================= */
 
-                    <div class="journal-field">
+.focus-banner {
 
-                        <label>
-                            Qu'est-ce que j'ai fait aujourd'hui ?
-                        </label>
+    margin-top: 20px;
 
-                        <textarea
-                            id="journalDone"
-                            placeholder="Travail, cours, projets, moments importants..."
-                        ></textarea>
+    padding: 27px 30px;
 
-                    </div>
+    background: var(--forest);
 
+    color: var(--cream);
 
-                    <div class="journal-field">
+    border-radius: 20px;
 
-                        <label>
-                            Qu'est-ce qui m'a bloqué ?
-                        </label>
+    display: flex;
 
-                        <textarea
-                            id="journalBlocked"
-                            placeholder="Difficulté, distraction, fatigue, procrastination..."
-                        ></textarea>
+    justify-content: space-between;
 
-                    </div>
+    align-items: center;
 
+    gap: 20px;
+}
 
-                    <div class="journal-field">
 
-                        <label>
-                            Que puis-je améliorer demain ?
-                        </label>
+.focus-banner h2 {
 
-                        <textarea
-                            id="journalImprove"
-                            placeholder="Une chose concrète que tu peux changer..."
-                        ></textarea>
+    margin-top: 6px;
 
-                    </div>
+    font-family:
+        "Playfair Display",
+        serif;
 
-                </div>
+    font-size: 27px;
 
+    font-weight: 500;
+}
 
-                <button
-                    class="primary-button"
-                    onclick="saveJournal()"
-                >
 
-                    <i data-lucide="save"></i>
+.focus-banner p {
 
-                    Sauvegarder la journée
+    margin-top: 4px;
 
-                </button>
+    color:
+        rgba(248,244,236,0.7);
 
-            </div>
+    font-size: 14px;
+}
 
 
+.focus-banner .card-label {
 
-            <div class="card journal-history-card">
+    color: #d5b58b;
+}
 
-                <div class="card-header journal-history-header">
 
-                    <div>
-                        <span class="card-label">
-                            HISTORIQUE
-                        </span>
+.focus-banner .primary-button {
 
-                        <h2>
-                            Mes journées
-                        </h2>
-                    </div>
+    background: var(--cream);
 
-                    <div class="journal-controls">
-                        <select id="journalMoodFilter" onchange="setJournalFilters()">
-                            <option value="all">Toutes les humeurs</option>
-                            <option value="5">Très bien</option>
-                            <option value="4">Bien</option>
-                            <option value="3">Moyenne</option>
-                            <option value="2">Mauvaise</option>
-                            <option value="1">Très mauvaise</option>
-                        </select>
+    color: var(--forest);
 
-                        <select id="journalSort" onchange="setJournalFilters()">
-                            <option value="date-desc">Plus récentes</option>
-                            <option value="date-asc">Plus anciennes</option>
-                            <option value="mood-desc">Meilleures → moins bonnes</option>
-                            <option value="mood-asc">Moins bonnes → meilleures</option>
-                        </select>
-                    </div>
+    flex-shrink: 0;
+}
 
-                </div>
 
-                <div id="journalHistory"></div>
+/* =========================================================
+   QUOTE
+========================================================= */
 
-            </div>
+.quote-card {
 
-        </section>
+    margin-top: 20px;
 
+    padding: 22px 25px;
 
+    background:
+        rgba(248,244,236,0.55);
 
-        <!-- ================= STATISTIQUES ================= -->
+    border:
+        1px solid var(--border);
 
-        <section id="stats" class="page">
+    border-radius: 17px;
 
-            <header class="page-header">
+    display: flex;
 
-                <div>
+    align-items: center;
 
-                    <p class="eyebrow">
-                        DONNÉES
-                    </p>
+    gap: 15px;
+}
 
-                    <h1>Statistiques</h1>
 
-                    <p class="subtitle">
-                        Observe ton évolution avec des données réelles.
-                    </p>
+.quote-card > span {
 
-                </div>
+    color: var(--burgundy);
 
-            </header>
+    font-size: 20px;
+}
 
 
-            <div class="stats-overview">
+.quote-card p {
 
-                <div class="stat-big card">
+    font-family:
+        "Playfair Display",
+        serif;
 
-                    <span class="card-label">
-                        CETTE SEMAINE
-                    </span>
+    font-size: 17px;
+}
 
-                    <strong id="statsWeekTime">
-                        0h 00
-                    </strong>
 
-                    <small>
-                        Temps de travail
-                    </small>
+/* =========================================================
+   BUTTONS
+========================================================= */
 
-                </div>
+.primary-button,
+.secondary-button,
+.danger-button {
 
+    min-height: 44px;
 
-                <div class="stat-big card">
+    display: inline-flex;
 
-                    <span class="card-label">
-                        CETTE SEMAINE
-                    </span>
+    justify-content: center;
 
-                    <strong id="statsWeekSessions">
-                        0
-                    </strong>
+    align-items: center;
 
-                    <small>
-                        Sessions terminées
-                    </small>
+    gap: 8px;
 
-                </div>
+    padding: 11px 17px;
 
+    border: none;
 
-                <div class="stat-big card">
+    border-radius: 11px;
 
-                    <span class="card-label">
-                        MOYENNE
-                    </span>
+    font-family: inherit;
 
-                    <strong id="statsAverage">
-                        0 min
-                    </strong>
+    font-size: 14px;
 
-                    <small>
-                        Par session
-                    </small>
+    font-weight: 600;
 
-                </div>
+    cursor: pointer;
 
-            </div>
+    transition: 0.2s;
+}
 
 
-            <div class="stats-comparison card">
+.primary-button {
 
-                <div class="card-header">
+    background: var(--forest);
 
-                    <div>
-                        <span class="card-label">
-                            ÉVOLUTION
-                        </span>
+    color: var(--cream);
+}
 
-                        <h2>
-                            Cette semaine vs précédente
-                        </h2>
-                    </div>
 
-                </div>
+.primary-button:hover {
 
+    transform: translateY(-1px);
 
-                <div class="comparison">
+    box-shadow:
+        0 7px 20px rgba(41,72,60,0.18);
+}
 
-                    <div>
-                        <small>
-                            Semaine précédente
-                        </small>
 
-                        <strong id="previousWeekTime">
-                            0h 00
-                        </strong>
-                    </div>
+.secondary-button {
 
+    background: var(--linen-dark);
 
-                    <div class="comparison-arrow">
-                        <i data-lucide="arrow-right"></i>
-                    </div>
+    color: var(--charcoal);
+}
 
 
-                    <div>
-                        <small>
-                            Cette semaine
-                        </small>
+.secondary-button:hover {
+    background: #d8cdbb;
+}
 
-                        <strong id="currentWeekTime">
-                            0h 00
-                        </strong>
-                    </div>
 
+.danger-button {
 
-                    <div
-                        id="weekEvolution"
-                        class="evolution"
-                    >
-                        —
-                    </div>
+    background:
+        rgba(134,67,67,0.1);
 
-                </div>
+    color: var(--burgundy);
+}
 
-            </div>
 
+.primary-button svg,
+.secondary-button svg,
+.danger-button svg {
 
-            <div class="card">
+    width: 17px;
+}
 
-                <div class="card-header">
 
-                    <div>
-                        <span class="card-label">
-                            RÉPARTITION
-                        </span>
+.text-button {
 
-                        <h2>
-                            Temps par matière
-                        </h2>
-                    </div>
+    border: none;
 
-                </div>
+    background: transparent;
 
+    color: var(--forest);
 
-                <div id="subjectStats"></div>
+    font-family: inherit;
 
-            </div>
+    font-size: 13px;
 
+    font-weight: 600;
 
-            <div class="charts-grid">
+    cursor: pointer;
 
-                <div class="card chart-card">
-                    <div class="card-header">
-                        <div>
-                            <span class="card-label">ÉVOLUTION</span>
-                            <h2>Temps travaillé par jour</h2>
-                        </div>
-                    </div>
-                    <canvas id="dailyWorkChart" height="250"></canvas>
-                </div>
+    display: flex;
 
-                <div class="card chart-card">
-                    <div class="card-header">
-                        <div>
-                            <span class="card-label">RÉGULARITÉ</span>
-                            <h2>Temps travaillé par semaine</h2>
-                        </div>
-                    </div>
-                    <canvas id="weeklyWorkChart" height="250"></canvas>
-                </div>
+    align-items: center;
 
-            </div>
+    gap: 6px;
+}
 
-            <div class="stats-grid">
 
-                <div class="card">
+.text-button svg {
+    width: 15px;
+}
 
-                    <span class="card-label">
-                        RÉGULARITÉ
-                    </span>
 
-                    <h2>
-                        Jours travaillés
-                    </h2>
+/* =========================================================
+   FORMS
+========================================================= */
 
-                    <div class="big-stat-number" id="totalDays">
-                        0
-                    </div>
+.add-task,
+.add-event {
 
-                    <p>
-                        jours avec au moins une session.
-                    </p>
+    display: flex;
 
-                </div>
+    gap: 10px;
 
+    margin-bottom: 26px;
+}
 
-                <div class="card">
 
-                    <span class="card-label">
-                        MEILLEUR JOUR
-                    </span>
+input,
+select,
+textarea {
 
-                    <h2>
-                        Ton record
-                    </h2>
+    min-height: 44px;
 
-                    <div class="big-stat-number" id="bestDay">
-                        0 min
-                    </div>
+    background: var(--linen);
 
-                    <p id="bestDayDate">
-                        Pas encore de données.
-                    </p>
+    color: var(--charcoal);
 
-                </div>
+    border:
+        1px solid var(--border);
 
-            </div>
+    border-radius: 11px;
 
-        </section>
+    padding: 10px 13px;
 
+    font-family: inherit;
 
+    font-size: 14px;
 
-        <!-- ================= PARAMÈTRES ================= -->
+    outline: none;
+}
 
-        <section id="settings" class="page">
 
-            <header class="page-header">
+input:focus,
+select:focus,
+textarea:focus {
 
-                <div>
+    border-color:
+        var(--forest-light);
 
-                    <p class="eyebrow">
-                        ASTRA
-                    </p>
+    box-shadow:
+        0 0 0 3px rgba(41,72,60,0.06);
+}
 
-                    <h1>Paramètres</h1>
 
-                    <p class="subtitle">
-                        Gère tes données.
-                    </p>
+.add-task input {
+    flex: 1;
+}
 
-                </div>
 
-            </header>
+/* =========================================================
+   SUBJECTS
+========================================================= */
 
+.subjects-grid {
 
-            <div class="card cloud-sync-card">
+    display: grid;
 
-                <div class="card-header">
-                    <div>
-                        <span class="card-label">CLOUD</span>
-                        <h2>Synchronisation</h2>
-                    </div>
-                    <span id="cloudStatusBadge" class="cloud-status-badge">Local uniquement</span>
-                </div>
+    grid-template-columns:
+        repeat(2,1fr);
 
-                <p class="cloud-description">
-                    Connecte Astra à ton compte pour retrouver tes données sur ton PC et ton téléphone.
-                    Le stockage local continue de fonctionner si tu es hors ligne.
-                </p>
+    gap: 20px;
+}
 
-                <div id="cloudLoggedOut" class="cloud-auth-panel">
-                    <div class="cloud-fields">
-                        <input id="cloudEmail" type="email" autocomplete="email" placeholder="Adresse e-mail">
-                        <input id="cloudPassword" type="password" autocomplete="current-password" placeholder="Mot de passe">
-                    </div>
-                    <div class="settings-actions">
-                        <button class="primary-button" onclick="cloudLogin()">
-                            <i data-lucide="log-in"></i>
-                            Se connecter
-                        </button>
-                        <button class="secondary-button" onclick="cloudSignUp()">
-                            <i data-lucide="user-plus"></i>
-                            Créer un compte
-                        </button>
-                    </div>
-                    <p id="cloudAuthMessage" class="cloud-message"></p>
-                </div>
 
-                <div id="cloudLoggedIn" class="cloud-auth-panel" hidden>
-                    <div class="cloud-account-row">
-                        <div>
-                            <span class="cloud-connected-dot"></span>
-                            <strong id="cloudUserEmail">Connecté</strong>
-                        </div>
-                        <button class="secondary-button" onclick="cloudLogout()">Se déconnecter</button>
-                    </div>
-                    <div class="cloud-sync-row">
-                        <div>
-                            <strong id="cloudLastSync">Pas encore synchronisé</strong>
-                            <small id="cloudSyncMessage">Tes données locales restent disponibles.</small>
-                        </div>
-                        <button class="primary-button" onclick="cloudSyncNow()">
-                            <i data-lucide="refresh-cw"></i>
-                            Synchroniser maintenant
-                        </button>
-                    </div>
-                </div>
+.subject-card {
 
-                <details class="cloud-config">
-                    <summary>Configuration Supabase</summary>
-                    <p>À faire une seule fois : colle l'URL et la clé publique de ton projet Supabase. Elles sont enregistrées uniquement dans ce navigateur.</p>
-                    <div class="cloud-fields">
-                        <input id="supabaseUrl" type="url" placeholder="https://xxxxx.supabase.co">
-                        <input id="supabaseAnonKey" type="text" placeholder="Clé anon / publishable key">
-                    </div>
-                    <button class="secondary-button" onclick="saveCloudConfig()">Enregistrer la configuration</button>
-                </details>
+    padding: 28px;
 
-            </div>
+    background:
+        rgba(248,244,236,0.82);
 
+    border:
+        1px solid var(--border);
 
-            <div class="card settings-card">
+    border-radius: 19px;
 
-                <h2>
-                    Données
-                </h2>
+    box-shadow: var(--shadow);
+}
 
-                <p>
-                    Tes données sont actuellement sauvegardées
-                    dans ce navigateur.
-                </p>
 
+.subject-top {
 
-                <div class="settings-actions">
+    display: flex;
 
-                    <button
-                        class="secondary-button"
-                        onclick="exportData()"
-                    >
+    justify-content: space-between;
 
-                        <i data-lucide="download"></i>
+    align-items: center;
 
-                        Exporter mes données
+    margin-bottom: 18px;
+}
 
-                    </button>
 
+.subject-name {
 
-                    <label class="secondary-button import-button">
+    font-family:
+        "Playfair Display",
+        serif;
 
-                        <i data-lucide="upload"></i>
+    font-size: 25px;
+}
 
-                        Importer une sauvegarde
 
-                        <input
-                            type="file"
-                            id="importFile"
-                            accept=".json"
-                            onchange="importData(event)"
-                            hidden
-                        >
+.subject-percent {
 
-                    </label>
+    color: var(--forest);
 
+    font-weight: 700;
+}
 
-                    <button
-                        class="danger-button"
-                        onclick="clearData()"
-                    >
 
-                        <i data-lucide="trash-2"></i>
+.progress {
 
-                        Effacer toutes les données
+    height: 8px;
 
-                    </button>
+    overflow: hidden;
 
-                </div>
+    background: var(--linen-dark);
 
-            </div>
+    border-radius: 10px;
+}
 
-        </section>
 
-    </main>
+.subject-description {
 
-</div>
+    margin-top: 13px;
 
+    color: var(--muted);
 
-<script src="script.js"></script>
+    font-size: 13px;
+}
 
-</body>
-</html>
+
+.subject-time {
+
+    margin-top: 15px;
+
+    color: var(--forest);
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+.timer-container {
+
+    max-width: 850px;
+
+    margin: 40px auto;
+
+    padding: 55px 30px;
+
+    text-align: center;
+}
+
+
+.big-timer {
+
+    margin: 40px 0;
+
+    color: var(--forest);
+
+    font-family:
+        "Playfair Display",
+        serif;
+
+    font-size:
+        clamp(90px,15vw,155px);
+
+    line-height: 1;
+}
+
+
+.session-form {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1.5fr 0.7fr;
+
+    gap: 10px;
+
+    max-width: 650px;
+
+    margin: 0 auto 25px;
+}
+
+
+.form-group {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+    text-align: left;
+}
+
+
+.form-group label,
+.goal-editor label,
+.mood-section label,
+.journal-field label {
+
+    color: var(--muted);
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.timer-buttons {
+
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+}
+
+
+.recent-sessions {
+
+    max-width: 850px;
+
+    margin: 20px auto 0;
+}
+
+
+.session-row {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 13px 0;
+
+    border-bottom:
+        1px solid var(--border);
+}
+
+
+.session-row:last-child {
+    border-bottom: none;
+}
+
+
+.session-row-main {
+    flex: 1;
+}
+
+
+.session-row-main strong {
+    display: block;
+
+    font-size: 14px;
+}
+
+
+.session-row-main small {
+
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+
+.session-duration {
+
+    color: var(--forest);
+
+    font-weight: 700;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   GOALS
+========================================================= */
+
+.goal-editor {
+
+    padding-bottom: 25px;
+
+    border-bottom:
+        1px solid var(--border);
+}
+
+
+.goal-input {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 10px;
+}
+
+
+.goal-input input {
+    width: 150px;
+}
+
+
+.goal-input span {
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+
+.goal-display {
+
+    padding-top: 28px;
+}
+
+
+.goal-number {
+
+    margin-bottom: 15px;
+
+    color: var(--forest);
+
+    font-family:
+        "Playfair Display",
+        serif;
+
+    font-size: 38px;
+}
+
+
+.goal-display p {
+
+    margin-top: 12px;
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+
+.weekly-subject-row {
+
+    margin-bottom: 22px;
+}
+
+
+.weekly-subject-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 7px;
+
+    font-size: 13px;
+}
+
+
+.weekly-subject-header span:last-child {
+
+    color: var(--muted);
+}
+
+
+/* =========================================================
+   JOURNAL
+========================================================= */
+
+.journal-editor {
+
+    max-width: 900px;
+
+    margin-bottom: 20px;
+}
+
+
+.journal-date h2 {
+    margin-top: 4px;
+}
+
+
+.mood-section {
+
+    margin:
+        25px 0;
+}
+
+
+.mood-buttons {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-top: 10px;
+}
+
+
+.mood-button {
+
+    border:
+        1px solid var(--border);
+
+    background: var(--linen);
+
+    color: var(--muted);
+
+    padding: 9px 13px;
+
+    border-radius: 10px;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    cursor: pointer;
+}
+
+
+.mood-button.active {
+
+    background: var(--forest);
+
+    color: var(--cream);
+
+    border-color: var(--forest);
+}
+
+
+.journal-fields {
+
+    display: grid;
+
+    gap: 20px;
+
+    margin-bottom: 25px;
+}
+
+
+.journal-field {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+textarea {
+
+    width: 100%;
+
+    min-height: 130px;
+
+    resize: vertical;
+
+    line-height: 1.6;
+}
+
+
+.journal-entry {
+
+    padding: 20px 0;
+
+    border-bottom:
+        1px solid var(--border);
+}
+
+
+.journal-entry:last-child {
+    border-bottom: none;
+}
+
+
+.journal-entry-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 12px;
+}
+
+
+.journal-mood {
+
+    color: var(--burgundy);
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.journal-entry h3 {
+
+    font-family:
+        "Playfair Display",
+        serif;
+
+    font-size: 20px;
+
+    font-weight: 500;
+}
+
+
+.journal-entry-section {
+
+    margin-top: 12px;
+}
+
+
+.journal-entry-section strong {
+
+    display: block;
+
+    color: var(--forest);
+
+    font-size: 11px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
+
+.journal-entry-section p {
+
+    margin-top: 4px;
+
+    color: var(--muted);
+
+    white-space: pre-wrap;
+
+    line-height: 1.5;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats-overview {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap: 17px;
+
+    margin-bottom: 20px;
+}
+
+
+.stat-big strong {
+
+    display: block;
+
+    margin: 8px 0;
+
+    color: var(--forest);
+
+    font-family:
+        "Playfair Display",
+        serif;
+
+    font-size: 42px;
+
+    font-weight: 500;
+}
+
+
+.stat-big small {
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+
+.comparison {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+
+    flex-wrap: wrap;
+}
+
+
+.comparison > div:not(.comparison-arrow):not(.evolution) {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+.comparison small {
+
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+
+.comparison strong {
+
+    color: var(--forest);
+
+    font-family:
+        "Playfair Display",
+        serif;
+
+    font-size: 28px;
+
+    font-weight: 500;
+}
+
+
+.comparison-arrow {
+
+    color: var(--muted);
+}
+
+
+.evolution {
+
+    margin-left: auto;
+
+    padding: 8px 12px;
+
+    background: var(--linen);
+
+    border-radius: 9px;
+
+    color: var(--forest);
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+
+.subject-stat {
+    margin-bottom: 22px;
+}
+
+
+.subject-stat-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-bottom: 7px;
+
+    font-size: 14px;
+}
+
+
+.subject-stat-header span:last-child {
+
+    color: var(--muted);
+}
+
+
+.stats-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap: 20px;
+
+    margin-top: 20px;
+}
+
+
+.big-stat-number {
+
+    margin-top: 15px;
+
+    color: var(--forest);
+
+    font-family:
+        "Playfair Display",
+        serif;
+
+    font-size: 50px;
+}
+
+
+.stats-grid p {
+
+    color: var(--muted);
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+.settings-card {
+    max-width: 750px;
+}
+
+
+.settings-card h2 {
+    margin-bottom: 10px;
+}
+
+
+.settings-card p {
+
+    color: var(--muted);
+
+    margin-bottom: 25px;
+}
+
+
+.settings-actions {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+}
+
+
+.import-button {
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty {
+
+    padding: 15px 0;
+
+    color: var(--muted);
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 950px) {
+
+    .sidebar {
+        width: 220px;
+    }
+
+
+    .main {
+
+        width: calc(100% - 220px);
+
+        margin-left: 220px;
+
+        padding:
+            45px
+            30px
+            70px;
+    }
+
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .session-form {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .app {
+        display: block;
+    }
+
+
+    .sidebar {
+
+        position: fixed;
+
+        top: auto;
+        bottom: 0;
+        left: 0;
+
+        width: 100%;
+
+        height: 72px;
+
+        padding: 7px;
+
+        background:
+            rgba(248,244,236,0.94);
+
+        border-top:
+            1px solid var(--border);
+
+        border-right: none;
+
+        backdrop-filter: blur(15px);
+    }
+
+
+    .logo,
+    .sidebar-bottom {
+        display: none;
+    }
+
+
+    nav {
+
+        width: 100%;
+        height: 100%;
+
+        flex-direction: row;
+
+        justify-content: space-around;
+
+        gap: 2px;
+    }
+
+
+    .nav-button {
+
+        width: auto;
+
+        min-width: 40px;
+
+        flex: 1;
+
+        padding: 4px;
+
+        justify-content: center;
+
+        flex-direction: column;
+
+        gap: 3px;
+
+        font-size: 8px;
+    }
+
+
+    .nav-button svg {
+
+        width: 19px;
+        height: 19px;
+    }
+
+
+    .main {
+
+        width: 100%;
+
+        margin: 0;
+
+        padding:
+            32px
+            18px
+            100px;
+    }
+
+
+    .page-header h1 {
+        font-size: 39px;
+    }
+
+
+    .quick-stats,
+    .stats-overview,
+    .subjects-grid,
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .focus-banner {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .add-task,
+    .add-event {
+
+        flex-direction: column;
+    }
+
+
+    .timer-container {
+
+        padding:
+            40px
+            15px;
+    }
+
+
+    .big-timer {
+        font-size: 85px;
+    }
+
+
+    .goal-input {
+
+        align-items: stretch;
+
+        flex-direction: column;
+    }
+
+
+    .goal-input input {
+        width: 100%;
+    }
+
+
+    .comparison {
+        gap: 15px;
+    }
+
+
+    .evolution {
+        margin-left: 0;
+    }
+
+}
+
+/* =========================================================
+   V3 — JOURNAL / MATIÈRES / GRAPHIQUES
+========================================================= */
+
+.journal-history-header { align-items: flex-end; }
+.journal-controls { display:flex; gap:10px; flex-wrap:wrap; }
+.journal-controls select { min-width:170px; }
+.journal-day-card { background:rgba(225,215,198,.45); border:1px solid rgba(91,72,53,.13); border-radius:17px; padding:22px; margin-bottom:12px; }
+.journal-day-card:last-child { margin-bottom:0; }
+.journal-day-date { color:var(--burgundy); font-size:12px; text-transform:capitalize; }
+.journal-day-card h3 { margin-top:6px; font-family:"Playfair Display",serif; font-size:23px; font-weight:500; }
+.journal-day-actions { display:flex; align-items:center; gap:10px; }
+.mood-score { background:rgba(248,244,236,.75); padding:7px 10px; border-radius:9px; color:var(--forest); font-size:12px; font-weight:700; }
+.journal-day-meta { display:flex; flex-wrap:wrap; gap:15px; margin:15px 0 3px; color:var(--muted); font-size:12px; }
+.journal-day-meta span { display:inline-flex; align-items:center; gap:5px; }
+.journal-day-meta svg { width:14px; height:14px; }
+
+.subject-card-button { width:100%; border:1px solid var(--border); color:inherit; font:inherit; text-align:left; cursor:pointer; transition:.2s; }
+.subject-card-button:hover { transform:translateY(-2px); box-shadow:0 14px 30px rgba(41,42,39,.09); border-color:rgba(41,72,60,.22); }
+.subject-chapters-preview { margin-top:15px; color:var(--forest-light); font-size:11px; }
+.subject-detail[hidden], #subjectsGrid[hidden] { display:none; }
+.back-button { border:0; background:transparent; color:var(--muted); padding:7px 0; font:inherit; cursor:pointer; display:inline-flex; align-items:center; gap:7px; margin-bottom:20px; }
+.back-button:hover { color:var(--forest); }
+.back-button svg { width:17px; }
+.subject-detail-header { display:flex; justify-content:space-between; align-items:flex-end; gap:20px; margin-bottom:25px; }
+.subject-detail-header h2 { margin-top:5px; font-family:"Playfair Display",serif; font-size:38px; font-weight:500; }
+.subject-detail-header p { color:var(--muted); margin-top:4px; }
+.subject-detail-layout { display:grid; grid-template-columns:minmax(260px,.8fr) minmax(0,1.5fr); gap:20px; }
+.chapter-list-card { min-height:350px; }
+.chapter-list-card .card-header strong { color:var(--forest); }
+.chapter-item { width:100%; border:0; background:transparent; text-align:left; padding:15px 10px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; font:inherit; color:var(--charcoal); }
+.chapter-item:hover { background:var(--linen); }
+.chapter-item.active { background:var(--forest); color:var(--cream); }
+.chapter-item strong { display:block; font-size:14px; }
+.chapter-item small { display:block; margin-top:4px; color:var(--muted); font-size:11px; }
+.chapter-item.active small { color:rgba(248,244,236,.68); }
+.chapter-arrow { font-size:24px; color:var(--muted); }
+.chapter-item.active .chapter-arrow { color:var(--cream); }
+.chapter-editor-card { min-height:350px; }
+.delete-chapter { border:0; background:transparent; color:var(--muted); cursor:pointer; padding:7px; border-radius:8px; }
+.delete-chapter:hover { color:var(--burgundy); background:rgba(134,67,67,.08); }
+.chapter-form { display:flex; flex-direction:column; gap:8px; }
+.chapter-form label { margin-top:6px; color:var(--muted); font-size:12px; font-weight:600; }
+.chapter-form label strong { float:right; color:var(--forest); }
+.chapter-form input[type=text], .chapter-form input:not([type]), .chapter-form input[type=range] { width:100%; }
+.chapter-notes { min-height:260px; resize:vertical; line-height:1.7; }
+.chapter-empty { min-height:300px; display:grid; place-items:center; align-content:center; text-align:center; color:var(--muted); }
+.chapter-empty svg { width:35px; height:35px; color:var(--forest); margin-bottom:10px; }
+.chapter-empty h2 { color:var(--charcoal); font-family:"Playfair Display",serif; font-weight:500; }
+.chapter-empty p { max-width:390px; margin-top:6px; }
+
+.charts-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:20px; }
+.chart-card canvas { display:block; width:100%; max-width:100%; }
+
+@media (max-width:950px) {
+    .subject-detail-layout, .charts-grid { grid-template-columns:1fr; }
+}
+@media (max-width:700px) {
+    .journal-history-header, .subject-detail-header { align-items:flex-start; flex-direction:column; }
+    .journal-controls { width:100%; }
+    .journal-controls select { flex:1; min-width:0; }
+    .journal-day-card { padding:18px; }
+    .subject-detail-header h2 { font-size:32px; }
+}
+
+/* =========================================================
+   V5 — NOTES SCOLAIRES
+========================================================= */
+
+.subject-grades-card {
+    margin-top: 22px;
+}
+
+.grades-summary {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.grades-average {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.grades-average strong {
+    font-size: 34px;
+    color: var(--forest);
+}
+
+.grades-average span {
+    color: var(--muted);
+}
+
+.grade-form {
+    display: grid;
+    grid-template-columns: 1.1fr 1.1fr 1fr .7fr .65fr auto;
+    gap: 12px;
+    align-items: end;
+    margin-top: 18px;
+}
+
+.grade-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.grade-field label {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+.grade-field input,
+.grade-field select {
+    width: 100%;
+    border: 1px solid var(--border);
+    background: var(--cream);
+    color: var(--charcoal);
+    border-radius: 11px;
+    padding: 11px 12px;
+    font: inherit;
+    outline: none;
+}
+
+.grade-field input:focus,
+.grade-field select:focus {
+    border-color: rgba(41,72,60,.35);
+    box-shadow: 0 0 0 3px rgba(41,72,60,.07);
+}
+
+.grades-table-wrap {
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+.grades-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+}
+
+.grades-table th,
+.grades-table td {
+    padding: 13px 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+.grades-table th {
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+.grades-table td {
+    font-size: 14px;
+}
+
+.grade-value {
+    font-weight: 700;
+    color: var(--forest);
+}
+
+.grade-coef {
+    color: var(--muted);
+}
+
+.grade-delete {
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+}
+
+.grade-delete:hover {
+    color: var(--burgundy);
+    background: rgba(134,67,67,.07);
+}
+
+.grades-global-card {
+    margin-top: 22px;
+}
+
+.global-grades-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.global-grade-item {
+    padding: 15px;
+    background: rgba(225,215,198,.32);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+}
+
+.global-grade-item small {
+    display: block;
+    color: var(--muted);
+    margin-bottom: 5px;
+}
+
+.global-grade-item strong {
+    font-size: 24px;
+    color: var(--forest);
+}
+
+@media (max-width: 1050px) {
+    .grade-form {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 650px) {
+    .grade-form {
+        grid-template-columns: 1fr;
+    }
+
+    .grades-summary {
+        gap: 12px;
+    }
+}
+
+/* =========================================================
+   V6 — SYNCHRONISATION CLOUD
+========================================================= */
+
+.cloud-sync-card { margin-bottom: 22px; }
+.cloud-status-badge {
+    display:inline-flex; align-items:center; padding:7px 11px; border-radius:999px;
+    background:var(--linen-dark); color:var(--muted); font-size:12px; font-weight:700;
+}
+.cloud-status-badge.connected { background:rgba(41,72,60,.12); color:var(--forest); }
+.cloud-status-badge.syncing { background:rgba(134,67,67,.10); color:var(--burgundy); }
+.cloud-description { color:var(--muted); line-height:1.65; margin:4px 0 20px; max-width:720px; }
+.cloud-auth-panel { display:flex; flex-direction:column; gap:14px; }
+.cloud-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.cloud-fields input {
+    width:100%; border:1px solid var(--border); background:rgba(255,255,255,.45); color:var(--charcoal);
+    border-radius:13px; padding:13px 14px; outline:none; font:inherit;
+}
+.cloud-fields input:focus { border-color:rgba(41,72,60,.35); box-shadow:0 0 0 3px rgba(41,72,60,.06); }
+.cloud-message { min-height:20px; color:var(--muted); font-size:13px; }
+.cloud-account-row, .cloud-sync-row { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.cloud-account-row > div { display:flex; align-items:center; gap:9px; }
+.cloud-connected-dot { width:9px; height:9px; border-radius:50%; background:var(--forest); display:inline-block; }
+.cloud-sync-row { margin-top:4px; padding:15px; border:1px solid var(--border); border-radius:16px; background:rgba(255,255,255,.25); }
+.cloud-sync-row div { display:flex; flex-direction:column; gap:3px; }
+.cloud-sync-row small { color:var(--muted); }
+.cloud-config { margin-top:18px; border-top:1px solid var(--border); padding-top:15px; }
+.cloud-config summary { cursor:pointer; font-weight:600; color:var(--forest); }
+.cloud-config p { margin:12px 0; color:var(--muted); font-size:13px; line-height:1.55; }
+@media (max-width:700px) {
+    .cloud-fields { grid-template-columns:1fr; }
+    .cloud-account-row, .cloud-sync-row { align-items:stretch; flex-direction:column; }
+}
