@@ -2099,15 +2099,20 @@ function saveJournal() {
     }
 
 
-    saveData();
+saveData();
 
+renderJournal();
 
-    renderJournal();
+// Vider le formulaire
+document.getElementById("journalDone").value = "";
+document.getElementById("journalBlocked").value = "";
+document.getElementById("journalImprove").value = "";
 
+selectedMood = null;
 
-    alert(
-        "Ta journée a été sauvegardée."
-    );
+document.querySelectorAll(".mood-button").forEach(button => {
+    button.classList.remove("active");
+});
 
 }
 
@@ -3300,16 +3305,17 @@ function clearData() {
 function updateDailyMessage() {
 
     const messages = [
+        "Travail petit à petit",
 
         "Roxane sera fière de toi",
-
-        "Travail petit à petit",
 
         "Je suis sur que tu y arriveras",
 
         "Roxane t'aime de tout son coeur",
+
         "Tu vas rendre Roxane heureuse",
     ];
+
 
 
     const index =
@@ -3373,15 +3379,28 @@ function renderAll() {
 ========================================================= */
 
 function ensureV3Data() {
-    if (!data.chapters || typeof data.chapters !== "object" || Array.isArray(data.chapters)) {
-        data.chapters = {};
-    }
-    Object.keys(data.subjects || {}).forEach(subject => {
-        if (!Array.isArray(data.chapters[subject])) data.chapters[subject] = [];
-    });
-    saveData();
-}
+    let changed = false;
 
+    if (
+        !data.chapters ||
+        typeof data.chapters !== "object" ||
+        Array.isArray(data.chapters)
+    ) {
+        data.chapters = {};
+        changed = true;
+    }
+
+    Object.keys(data.subjects || {}).forEach(subject => {
+        if (!Array.isArray(data.chapters[subject])) {
+            data.chapters[subject] = [];
+            changed = true;
+        }
+    });
+
+    if (changed) {
+        saveData();
+    }
+}
 let currentSubjectName = null;
 let currentChapterId = null;
 let journalMoodFilter = "all";
@@ -3439,7 +3458,7 @@ function renderJournal() {
             <div class="journal-entry-header">
                 <div>
                     <span class="journal-day-date">${escapeHTML(formatDateLong(entry.date))}</span>
-                    <h3>${moodIcon(entry.mood)} ${escapeHTML(getMoodLabel(entry.mood))}</h3>
+                    <h3>${escapeHTML(getMoodLabel(entry.mood))}</h3>
                 </div>
                 <div class="journal-day-actions">
                     <span class="mood-score">${entry.mood ? `${entry.mood}/5` : "—"}</span>
